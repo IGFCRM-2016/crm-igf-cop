@@ -1,0 +1,14 @@
+@(username: String)
+@js={
+	<script>
+        var timer = setTimeout(function() {
+            window.location='@routes.HomeController.login'
+        }, 3000);
+    </script>
+}
+@base("Usuario Registrado",js){
+	<div class="alert alert-success" role="alert">
+		<p>Usuario @username creado con Exito!</p>
+		<p>Seras redirigido en 5 segundos a la pantalla de logueo...</p>
+	</div>
+}

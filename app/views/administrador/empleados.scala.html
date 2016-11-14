@@ -1,0 +1,326 @@
+@(empleado_form: Form[Empleado], empleados_list: List[Empleado] )
+@import helper._
+
+@css = {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap-table.css")">
+}
+
+@js={
+	<script src="@routes.Assets.versioned("javascripts/bootstrap-table.js")" type="text/javascript"></script>
+
+	@if(flash.containsKey("modal")) {
+		<script>
+	    	$(window).load(function(){
+	        	$('#@flash.get("modal")').modal('show');
+	    	});
+	    </script>
+	}
+
+
+	<!-- fix modal close -->
+	<script>
+		$('.modal').on('hidden.bs.modal', function () {
+			if(window.location.pathname!='@routes.AdministradorController.empleados'){
+				
+				window.location='@routes.AdministradorController.empleados';
+			}	
+		});
+	</script>
+
+
+
+
+
+
+}
+
+@errores_formulario={
+
+	@if(empleado_form.hasGlobalErrors) {
+
+        @for(error <- empleado_form.globalErrors) {
+	        <div class="alert alert-danger">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+			</div>
+        }
+	}
+
+	@for(error <- empleado_form("codigo").errors) {
+		<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+		</div>
+	}
+
+	@for(error <- empleado_form("nombre").errors) {
+    	<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+		</div>
+	}
+
+	@for(error <- empleado_form("telefono").errors) {
+    	<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+		</div>
+	}
+
+	@for(error <- empleado_form("email").errors) {
+    	<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+		</div>
+	}
+
+	@for(error <- empleado_form("username").errors) {
+    	<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+		</div>
+	}
+
+	@for(error <- empleado_form("password").errors) {
+    	<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+		</div>
+	}
+
+	@for(error <- empleado_form("password_confirmation").errors) {
+    	<div class="alert alert-danger">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+		</div>
+	}
+
+}
+
+@administrador.base("Admin CRM","Empleados","Gestion de empleados","empleados",css,js){
+
+
+	<button type="button" id="main-add-button" class="btn btn-primary" data-toggle="modal" data-target="#mod-new"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar Empleado</button>
+
+	@if(flash.containsKey("exito")){
+		<div class="alert alert-success fade in">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+			<strong>@flash.get("exito")</strong>
+		</div>
+	}
+
+
+  	<!-- Modal -->
+	<div class="modal fade" id="mod-new" role="dialog">
+
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			@form(action=routes.AdministradorController.empleado_new()){
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Agregar nuevo empleado</h4>
+				</div>
+				@errores_formulario
+				<div class="modal-body">
+
+
+
+						
+	        		 <div class="form-group">
+	        		 	@inputText(empleado_form("codigo"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Codigo del empleado", '_label -> "Codigo de Empleado: ")
+	        		 </div>
+
+	        		 <div class="form-group">
+	        		 	@inputText(empleado_form("nombre"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Nombre del empleado", '_label -> "Nombe: ")
+	        		 </div>
+
+	        		 <div class="form-group">
+	        		 	@inputText(empleado_form("telefono"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Numero telefonico", '_label -> "Telefono: ")
+	        		 </div>
+
+	        		 <div class="form-group">
+	        		 	@inputText(empleado_form("email"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "empleado@empresa.com", '_label -> "Correo Electronico: ")
+	        		 </div>
+
+	        		 <div class="form-group">
+						@select(empleado_form("tipo.id"), options(TipoEmpleado.options), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Tipo de Empleado",'_label -> "Tipo de Empleado: ")
+					 </div>
+
+					 <div class="form-group">
+						@inputText(empleado_form("username"), '_showConstraints -> false, '_showErrors -> false ,'class -> "form-control", 'placeholder -> "sn036156",'_label -> "Usuario: ")
+					 </div>
+
+					 <div class="form-group">
+						@inputText(empleado_form("password"),'type -> "password", '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Use contraseñas seguras",'_label -> "Contraseña: ")
+					 </div>
+
+					 <div class="form-group">
+						@inputText(empleado_form("password_confirmation"),'type -> "password", '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Use contraseñas seguras",'_label -> "Confirme Contraseña: ")
+					 </div>
+
+
+
+
+				</div>
+				<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar</button>
+				</div>
+			}
+		</div>
+
+		</div>
+	</div>
+
+                	
+
+
+
+
+
+	<div class="table-responsive">
+		<div class="form-group pull-right">
+		<input type="text" class="search form-control" placeholder="Busqueda">
+	</div>
+	<span class="counter pull-right"></span>
+	<table class="table table-hover table-bordered results">
+		<thead>
+			<tr>
+				<th>Codigo</th>
+				<th class="col-md-5 col-xs-5">Nombre</th>
+				<th class="col-md-4 col-xs-4">Tipo</th>
+				<th class="col-md-3 col-xs-3">Telefono</th>
+				<th class="col-md-3 col-xs-3">Correo</th>
+				<th class="col-md-3 col-xs-3">Usuario</th>
+				<th class="col-md-3 col-xs-3 center-column">Editar</th>
+				<th class="col-md-3 col-xs-3 center-column">Eliminar</th>
+			</tr>
+			<tr class="warning no-result">
+				<td colspan="4"><i class="fa fa-warning"></i> No hay resultados</td>
+			</tr>
+		</thead>
+		<tbody>
+			@for(empleado <- empleados_list){
+				<tr>
+					<td>@empleado.codigo</td>
+					<td>@empleado.nombre</td>
+					<td>@empleado.tipo.nombre</td>
+					<td>@empleado.telefono</td>
+					<td>@empleado.email</td>
+					<td>@empleado.username</td>
+					<td><button class="btn btn-success btn-xs" data-toggle="modal" data-target="#mod-edit-@empleado.id"><span class="glyphicon glyphicon-edit"></span> Editar</button></td>
+					<td><button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#mod-remove-@empleado.id"><span class="glyphicon glyphicon-trash"></span> Eliminar</button></td>
+				</tr>
+
+
+
+				<!-- Modal -->
+				<div class="modal fade" id="mod-edit-@empleado.id" role="dialog">
+					
+					<div class="modal-dialog">
+
+					<!-- Modal content-->
+					<div class="modal-content">
+						@form(action=routes.AdministradorController.empleado_edit(empleado.id)){
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title">Editar empleado: @empleado.nombre</h4>
+								</div>
+								@errores_formulario
+								<div class="modal-body">
+
+
+									 <div class="form-group">
+					        		 	@inputText(empleado.getForm()("id"), '_showConstraints -> false, 'readonly -> "readonly" , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Codigo del empleado", '_label -> "Codigo de Empleado: ")
+					        		 </div>
+									
+					        		 <div class="form-group">
+					        		 	@inputText(empleado.getForm()("codigo"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Codigo del empleado", '_label -> "Codigo de Empleado: ")
+					        		 </div>
+
+					        		 <div class="form-group">
+					        		 	@inputText(empleado.getForm()("nombre"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Nombre del empleado", '_label -> "Nombe: ")
+					        		 </div>
+
+					        		 <div class="form-group">
+					        		 	@inputText(empleado.getForm()("telefono"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Numero telefonico", '_label -> "Telefono: ")
+					        		 </div>
+
+					        		 <div class="form-group">
+					        		 	@inputText(empleado.getForm()("email"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "empleado@empresa.com", '_label -> "Correo Electronico: ")
+					        		 </div>
+
+					        		 <div class="form-group">
+										@select(empleado.getForm()("tipo.id"), options(TipoEmpleado.options), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Tipo de Empleado",'_label -> "Tipo de Empleado: ")
+									 </div>
+
+									 <div class="form-group">
+										@inputText(empleado.getForm()("username"), '_showConstraints -> false, '_showErrors -> false ,'class -> "form-control", 'placeholder -> "sn036156",'_label -> "Usuario: ")
+									 </div>
+
+									 <div class="form-group">
+										@inputText(empleado.getForm()("password"),'type -> "password", '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Use contraseñas seguras",'_label -> "Contraseña: ")
+									 </div>
+
+									 <div class="form-group">
+										@inputText(empleado.getForm()("password_confirmation"),'type -> "password", '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Use contraseñas seguras",'_label -> "Confirme Contraseña: ")
+									 </div>
+
+
+
+
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+									<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar</button>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+
+
+
+
+
+				<!-- Modal -->
+				<div class="modal fade" id="mod-remove-@empleado.id" role="dialog">
+					<div class="modal-dialog">
+
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Eliminar empleado: @empleado.nombre</h4>
+							</div>
+							<div class="modal-body">
+
+								¿Esta seguro que desea eliminar el empleado?.
+								Tome en cuenta que se eliminaran todos los datos referentes al empleado.
+
+
+							</div>
+							<div class="modal-footer">
+								<form>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+								<!-- <a href="@routes.AdministradorController.empleado_remove(empleado.id)" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar</a> -->
+								
+								<button type="submit" class="btn btn-danger" formmethod="POST" formaction="@routes.AdministradorController.empleado_remove(empleado.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar</button>
+								</form>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+
+			}
+		</tbody>
+	</table>
+	</div>
+
+
+}

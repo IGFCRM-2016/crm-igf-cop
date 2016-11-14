@@ -1,0 +1,53 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Rutas del HomeController
+GET	/	controllers.HomeController.index
+GET	/login	controllers.HomeController.login
+POST	/login	controllers.HomeController.login_post
+GET	/logout	controllers.HomeController.logout
+GET	/register	controllers.HomeController.register
+POST /register	controllers.HomeController.register_post
+GET	/about	controllers.HomeController.about
+
+
+
+# Rutas del ClienteController
+GET	/productos	controllers.ClienteController.productos
+GET	/ofertas	controllers.ClienteController.ofertas
+GET	/incidentes	controllers.ClienteController.incidentes
+GET	/carretilla	controllers.ClienteController.carretilla
+
+
+
+# Rutas del AgenteServicioController
+GET	/agente_s/incidencias	controllers.AgenteServicioController.incidencias
+
+
+# Rutas del AgenteServicioController
+GET	/agente_m/ofertas	controllers.AgenteMarketingController.ofertas
+
+
+# Rutas del AdministradorController
+GET /admin/empleados	controllers.AdministradorController.empleados
+GET	/admin/productos	controllers.AdministradorController.productos
+POST /admin/empleados/new controllers.AdministradorController.empleado_new
+POST /admin/productos/new controllers.AdministradorController.producto_new
+POST /admin/empleados/edit/:id controllers.AdministradorController.empleado_edit(id: Long)
+POST /admin/productos/edit/:id controllers.AdministradorController.producto_edit(id: Long)
+POST /admin/empleados/remove/:id controllers.AdministradorController.empleado_remove(id: Long)
+POST /admin/productos/remove/:id controllers.AdministradorController.producto_remove(id: Long)
+
+
+
+
+
+# An example controller showing how to use dependency injection
+GET     /count                      controllers.CountController.count
+# An example controller showing how to write asynchronous code
+GET     /message                    controllers.AsyncController.message
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
