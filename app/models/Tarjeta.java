@@ -21,7 +21,7 @@ public class Tarjeta extends Model{
 	 @Constraints.Required(message="")
 	 public double saldo=100;
 
-	 @OneToOne
+	 @OneToOne(cascade=CascadeType.ALL)
 	 public Cliente cliente;
 
      public static Finder<Long, Tarjeta> find = new Finder<Long,Tarjeta>(Tarjeta.class);

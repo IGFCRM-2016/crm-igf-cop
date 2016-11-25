@@ -23,4 +23,8 @@ public class AgenteServicioController extends Controller {
 		// }     
   //   }
 
+	public Result chat() {
+        return ok(chat.render());
+    }
+
 }

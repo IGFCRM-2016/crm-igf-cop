@@ -33,11 +33,17 @@ public class Producto extends Model{
 	@Constraints.Required(message="Debe ingresar una cantidad de existencias inicial")
 	public int existencias;
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	public Categoria categoria;
+
+	@Constraints.Required(message="Debe ingresar el genero a quien pertenece")
+	public int genero;//1,masculino/2,femenino/3,unisex/
 
 	@Lob
 	public byte[] imagen;
+
+	//@Column(length=3)
+	public String contentTypeImagen;
 
     public static Finder<Long, Producto> find = new Finder<Long,Producto>(Producto.class);
 

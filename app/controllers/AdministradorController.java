@@ -4,7 +4,9 @@ import play.*;
 import play.mvc.*;
 import play.data.*;
 import java.util.*;
-import java.io.File;
+import java.io.*;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 // import java.util.ArrayList;
 // import java.util.List;
 // import java.util.Map;
@@ -128,9 +130,42 @@ public class AdministradorController extends Controller {
 
 
     public Result producto_new() {
-        Form<Producto> producto_form = Form.form(Producto.class);
+        Form<Producto> producto_form = Form.form(Producto.class).bindFromRequest();
         List<Producto> productos_list = Producto.find.findList();
-        return ok(productos.render(producto_form,productos_list));   
+
+        //Si hay errores siempre los retornara
+        if( producto_form.hasErrors() ){
+            flash("modal","mod-new");
+            return badRequest(productos.render(producto_form,productos_list));
+        }
+
+        Producto nuevo = producto_form.get();
+
+        try{
+            
+
+            MultipartFormData body = request().body().asMultipartFormData();
+            FilePart picture = body.getFile("imagen");
+              if (picture != null) {
+                String contentType = picture.getContentType(); 
+                File file = (File)picture.getFile();
+                RandomAccessFile raf = new RandomAccessFile(file, "r");
+                nuevo.imagen=new byte[(int)raf.length()];
+                raf.readFully(nuevo.imagen);
+                nuevo.contentTypeImagen=contentType;
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        
+        nuevo.save();
+
+
+
+        flash("exito","Operacion exitosa!");
+
+        return redirect(routes.AdministradorController.productos()); 
     }
 
  //edit
@@ -151,12 +186,33 @@ public class AdministradorController extends Controller {
             prod.codigo=producto_form.get().codigo;
             prod.nombre=producto_form.get().nombre;
             prod.descripcion=producto_form.get().descripcion;
+            prod.genero=producto_form.get().genero;
             prod.precio=producto_form.get().precio;
             prod.existencias=producto_form.get().existencias;
             prod.categoria.id=producto_form.get().categoria.id;
 
+            //edicion de imagen
+            try{
+                
+
+                MultipartFormData body = request().body().asMultipartFormData();
+                FilePart picture = body.getFile("imagen");
+                  if (picture != null) {
+                    if(((File)picture.getFile()).length()!=0){
+                        String contentType = picture.getContentType(); 
+                        File file = (File)picture.getFile();
+                        RandomAccessFile raf = new RandomAccessFile(file, "r");
+                        prod.imagen=new byte[(int)raf.length()];
+                        raf.readFully(prod.imagen);
+                        prod.contentTypeImagen=contentType;
+                    }
+                }
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+
             prod.update();
-        }        
+        }
 
         flash("exito","Operacion exitosa!");
 
@@ -185,5 +241,25 @@ public class AdministradorController extends Controller {
             return redirect(routes.AdministradorController.productos());
         }
         return redirect(routes.AdministradorController.productos());
+    }
+
+
+
+    public Result getProductImage(Long id){
+
+        try {
+            Producto prod = Producto.find.byId(id);
+            InputStream input = new ByteArrayInputStream(prod.imagen);
+            java.awt.image.BufferedImage image =  javax.imageio.ImageIO.read(input);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            javax.imageio.ImageIO.write(image,prod.contentTypeImagen.split("/")[1],baos);
+
+            return ok(baos.toByteArray()).as(prod.contentTypeImagen);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return ok();
     }
 }//cierre de clase

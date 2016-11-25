@@ -35,13 +35,13 @@ public class Cliente extends Model{
 	@Constraints.Required(message="Debe ingresar el password")
 	public String password;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Tarjeta tarjeta;
 
-	@OneToMany(mappedBy="cliente")
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	public List<Gusto> gustos;
 
-	@OneToMany(mappedBy="cliente")
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	public List<Compra> compras;
 
 	

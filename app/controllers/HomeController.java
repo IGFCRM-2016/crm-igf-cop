@@ -177,4 +177,6 @@ public class HomeController extends Controller {
     	session().clear();
     	return redirect(routes.HomeController.index());
     }
+
+
 }

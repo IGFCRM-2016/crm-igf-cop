@@ -59,7 +59,14 @@
                         }
                             <a href="@routes.AgenteServicioController.incidencias"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Incidencias</a>
                         </li>
-                    </li>
+
+                        @if(activo=="chat"){
+                            <li class="active">
+                        }else{
+                            <li>
+                        }
+                            <a href="@routes.AgenteServicioController.chat"><span class="glyphicon glyphicon-console" aria-hidden="true"></span> Chat</a>
+                        </li>
 
                     </ul>
                 </div>

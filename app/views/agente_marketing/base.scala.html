@@ -52,6 +52,7 @@
                 <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav">
+                        
                         @if(activo=="ofertas"){
                             <li class="active">
                         }else{
@@ -59,6 +60,16 @@
                         }
                             <a href="@routes.AgenteMarketingController.ofertas"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Ofertas</a>
                         </li>
+
+
+                        @if(activo=="estadisticas"){
+                            <li class="active">
+                        }else{
+                            <li>
+                        }
+                            <a href="@routes.AgenteMarketingController.estadisticas"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Estadisticas</a>
+                        </li>
+
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->

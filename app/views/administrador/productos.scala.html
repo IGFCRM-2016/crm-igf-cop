@@ -113,7 +113,7 @@
 
 		<!-- Modal content-->
 		<div class="modal-content">
-			@form(action=routes.AdministradorController.producto_new()){
+			@form(action=routes.AdministradorController.producto_new(), 'enctype -> "multipart/form-data"){
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title">Agregar nuevo producto</h4>
@@ -121,9 +121,13 @@
 				@errores_formulario
 				<div class="modal-body">
 
+					 <label for="imagen">Imagen:</label>
+					 <input type="file" name="imagen" id="imagen" class="filestyle" data-buttonText="Seleccione Imagen" data-buttomName="btn-primary" data-iconName="glyphicon glyphicon-picture" onchange="if (this.files && this.files[0]) {var reader = new FileReader();reader.onload = function (e) {$('#preview').attr('src', e.target.result);};reader.readAsDataURL(this.files[0]);}">
 
+					 <center>
+					 	<img id="preview" class="img-responsive" src="#" alt="Preview"/>
+					 </center>
 
-						
 	        		 <div class="form-group">
 	        		 	@inputText(producto_form("codigo"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Codigo del producto", '_label -> "Codigo de Producto: ")
 	        		 </div>
@@ -133,7 +137,11 @@
 	        		 </div>
 
 	        		 <div class="form-group">
-	        		 	@inputText(producto_form("decripcion"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Descripción", '_label -> "Descripción: ")
+	        		 	@inputText(producto_form("descripcion"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Descripción", '_label -> "Descripción: ")
+	        		 </div>
+
+	        		 <div class="form-group">
+						@select(producto_form("genero"), options("1" -> "Masculino", "2" -> "Femenino", "3" -> "Unisex"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Genero",'_label -> "Genero: ")
 	        		 </div>
 
 	        		 <div class="form-group">
@@ -144,13 +152,11 @@
 	        		 	@inputText(producto_form("existencias"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "29", '_label -> "Existencia: ")
 	        		 </div>
 
-
 	        		 <div class="form-group">
 						@select(producto_form("categoria.id"), options(Categoria.options), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Categoria",'_label -> "Categoria: ")
 					 </div>
 
-					 <label for="imagen">Imagen:</label>
-					 <input type="file" name="imagen" id="imagen" class="filestyle" data-buttonText="Seleccione Imagen" data-buttomName="btn-primary" data-iconName="glyphicon glyphicon-picture">
+					 
 
 				</div>
 				<div class="modal-footer">
@@ -171,15 +177,17 @@
 
 	<div class="table-responsive">
 		<div class="form-group pull-right">
-		<input type="text" class="search form-control" placeholder="Busqueda">
-	</div>
+			<input type="text" class="search form-control" placeholder="Busqueda">
+		</div>
 	<span class="counter pull-right"></span>
 	<table class="table table-hover table-bordered results">
 		<thead>
 			<tr>
 				<th class="col-md-2 col-xs-2">Codigo</th>
-				<th class="col-md-3 col-xs-3">Imagen</th>
-				<th class="col-md-4 col-xs-4">Nombre</th>
+				<th class="col-md-1 col-xs-1">Imagen</th>
+				<th class="col-md-3 col-xs-3">Nombre</th>
+				<th class="col-md-1 col-xs-1">Genero</th>
+				<th class="col-md-2 col-xs-2">Descripcion</th>
 				<th class="col-md-3 col-xs-3">Precio</th>
 				<th class="col-md-3 col-xs-3">existencias</th>
 				<th class="col-md-5 col-xs-5">Categoria</th>
@@ -194,9 +202,11 @@
 			@for(producto <- productos_list){
 				<tr>
 					<td>@producto.codigo</td>
-					<td>@producto.imagen</td>
+					<td height="90"><img src="@routes.AdministradorController.getProductImage(producto.id)" class="img-thubnail"  width="75"/></td>
 					<td>@producto.nombre</td>
-					<td>@producto.precio</td>
+					<td>@if(producto.genero==1){Masculino}else{@if(producto.genero==2){Femenino}else{Unisex}}</td>
+					<td>@producto.descripcion</td>
+					<td>$ @producto.precio</td>
 					<td>@producto.existencias</td>
 					<td>@producto.categoria.nombre</td>
 					<td><button class="btn btn-success btn-xs" data-toggle="modal" data-target="#mod-edit-@producto.id"><span class="glyphicon glyphicon-edit"></span> Editar</button></td>
@@ -212,7 +222,7 @@
 
 					<!-- Modal content-->
 					<div class="modal-content">
-						@form(action=routes.AdministradorController.producto_edit(producto.id)){
+						@form(action=routes.AdministradorController.producto_edit(producto.id), 'enctype -> "multipart/form-data"){
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal">&times;</button>
 								<h4 class="modal-title">Editar producto: @producto.nombre</h4>
@@ -220,6 +230,13 @@
 								@errores_formulario
 								<div class="modal-body">
 
+
+									 <label for="imagen">Imagen:</label>
+					 				 <input type="file" name="imagen" id="imagen" class="filestyle" data-buttonText="Seleccione Imagen" data-buttomName="btn-primary" data-iconName="glyphicon glyphicon-picture" onchange="if (this.files && this.files[0]) {var reader = new FileReader();reader.onload = function (e) {$('#preview-@producto.id').attr('src', e.target.result);};reader.readAsDataURL(this.files[0]);}">
+
+									 <center>
+									 	<img id="preview-@producto.id"  class="img-responsive" src="@routes.AdministradorController.getProductImage(producto.id)" alt="Preview"/>
+									 </center>
 
 									 <div class="form-group">
 					        		 	@inputText(producto.getForm()("id"), '_showConstraints -> false, 'readonly -> "readonly" , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Codigo del producto", '_label -> "Codigo de producto: ")
@@ -232,24 +249,27 @@
 					        		 <div class="form-group">
 					        		 	@inputText(producto.getForm()("nombre"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Nombre del producto", '_label -> "Nombre: ")
 					        		 </div>
+
 					        		  <div class="form-group">
 					        		 	@inputText(producto.getForm()("descripcion"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Descripción del producto", '_label -> "Descripción: ")
 					        		 </div>
+
+					        		 <div class="form-group">
+										@select(producto.getForm()("genero"), options("1" -> "Masculino", "2" -> "Femenino", "3" -> "Unisex"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Genero",'_label -> "Genero: ")
+					        		 </div>
+
 									 <div class="form-group">
 					        		 	@inputText(producto.getForm()("precio"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "20.1", '_label -> "Precio: ")
 					        		 </div>
 					        		 <div class="form-group">
 					        		 	@inputText(producto.getForm()("existencias"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Existencias", '_label -> "Existencias: ")
 					        		 </div>
-			        		
+			        			
+
 					        		 <div class="form-group">
 										@select(producto.getForm()("categoria.id"), options(Categoria.options), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Categoria",'_label -> "Categoría: ")
 									 </div>
 
-									<label for="imagen">Imagen:</label>
-					 				<input type="file" name="imagen" id="imagen" class="filestyle" data-buttonText="Seleccione Imagen" data-buttomName="btn-primary" data-iconName="glyphicon glyphicon-picture">
-
-									 
 
 								</div>
 								<div class="modal-footer">

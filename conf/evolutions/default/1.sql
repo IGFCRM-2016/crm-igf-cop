@@ -91,11 +91,15 @@ create table linea_producto (
 
 create table oferta (
   id                            bigint auto_increment not null,
+  codigo                        varchar(255),
+  nombre                        varchar(255),
   fecha_inicio                  datetime(6),
   fecha_fin                     datetime(6),
   precio                        double,
+  descripcion                   varchar(255),
+  imagen                        longblob,
+  content_type_imagen           varchar(255),
   genero                        integer,
-  compras_minimas               integer,
   constraint pk_oferta primary key (id)
 );
 
@@ -107,7 +111,9 @@ create table producto (
   precio                        double,
   existencias                   integer,
   categoria_id                  bigint,
+  genero                        integer,
   imagen                        longblob,
+  content_type_imagen           varchar(255),
   constraint pk_producto primary key (id)
 );
 

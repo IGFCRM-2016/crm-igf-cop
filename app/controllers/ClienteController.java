@@ -4,6 +4,8 @@ import play.mvc.*;
 
 import views.html.cliente.*;
 
+import models.*;
+
 
 public class ClienteController extends Controller {
 
@@ -22,5 +24,11 @@ public class ClienteController extends Controller {
     public Result carretilla() {
     	return ok(carretilla.render());
     }
+
+    public Result chat() {
+        return ok(chat.render());
+    }
+
+    
 
 }
