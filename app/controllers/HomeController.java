@@ -1,29 +1,18 @@
 package controllers;
-
+import models.*;
 import play.*;
 import play.mvc.*;
 import play.data.*;
 import java.util.*;
-//import java.util.Map;
-//import static play.data.Form.*;
-
-
-
+import java.io.*;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import javax.persistence.*;
-
 import play.db.ebean.*;
 import play.data.format.*;
 import play.data.validation.*;
-
 import com.avaje.ebean.*;
-
-
-
 import views.html.*;
-
-import models.*;
-
-
 
 
 /**
@@ -39,11 +28,10 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
-    	if(session("connected")==null){
-    		return ok(index.render());
-    	}else{
-    		return redirect(routes.ClienteController.productos());
-    	}
+
+    	   List<Producto> productos_list = Producto.find.findList();
+    		return ok(index.render(productos_list));
+    	
         
     }
 
@@ -178,5 +166,30 @@ public class HomeController extends Controller {
     	return redirect(routes.HomeController.index());
     }
 
+   /* public Result productos() {
+            List<Producto> productos_list = Producto.find.findList();
+        
+        return ok(productos.render(productos_list));
+
+    }
+    */
+
+    public Result getProductImage(Long id){
+
+        try {
+            Producto prod = Producto.find.byId(id);
+            InputStream input = new ByteArrayInputStream(prod.imagen);
+            java.awt.image.BufferedImage image =  javax.imageio.ImageIO.read(input);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            javax.imageio.ImageIO.write(image,prod.contentTypeImagen.split("/")[1],baos);
+
+            return ok(baos.toByteArray()).as(prod.contentTypeImagen);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return ok();
+    }
 
 }

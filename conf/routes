@@ -10,6 +10,8 @@ GET	/logout	controllers.HomeController.logout
 GET	/register	controllers.HomeController.register
 POST /register	controllers.HomeController.register_post
 GET	/about	controllers.HomeController.about
+GET /productos/image/:id controllers.HomeController.getProductImage(id: Long)
+
 
 
 
@@ -20,6 +22,7 @@ GET	/ofertas	controllers.ClienteController.ofertas
 GET	/incidentes	controllers.ClienteController.incidentes
 GET	/carretilla	controllers.ClienteController.carretilla
 GET	/chat	controllers.ClienteController.chat
+GET /productos/image/:id controllers.ClienteController.getProductImage(id: Long)
 
 
 
