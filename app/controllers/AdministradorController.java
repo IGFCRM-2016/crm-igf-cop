@@ -147,12 +147,14 @@ public class AdministradorController extends Controller {
             MultipartFormData body = request().body().asMultipartFormData();
             FilePart picture = body.getFile("imagen");
               if (picture != null) {
-                String contentType = picture.getContentType(); 
-                File file = (File)picture.getFile();
-                RandomAccessFile raf = new RandomAccessFile(file, "r");
-                nuevo.imagen=new byte[(int)raf.length()];
-                raf.readFully(nuevo.imagen);
-                nuevo.contentTypeImagen=contentType;
+                if(((File)picture.getFile()).length()!=0){
+                    String contentType = picture.getContentType(); 
+                    File file = (File)picture.getFile();
+                    RandomAccessFile raf = new RandomAccessFile(file, "r");
+                    nuevo.imagen=new byte[(int)raf.length()];
+                    raf.readFully(nuevo.imagen);
+                    nuevo.contentTypeImagen=contentType;
+                }
             }
         }catch(Exception ex){
             ex.printStackTrace();

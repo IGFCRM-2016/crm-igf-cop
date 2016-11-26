@@ -100,6 +100,7 @@ create table oferta (
   imagen                        longblob,
   content_type_imagen           varchar(255),
   genero                        integer,
+  active                        tinyint(1) default 0,
   constraint pk_oferta primary key (id)
 );
 
@@ -114,6 +115,7 @@ create table producto (
   genero                        integer,
   imagen                        longblob,
   content_type_imagen           varchar(255),
+  active                        tinyint(1) default 0,
   constraint pk_producto primary key (id)
 );
 

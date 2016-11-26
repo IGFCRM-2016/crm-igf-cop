@@ -37,13 +37,18 @@ public class Producto extends Model{
 	public Categoria categoria;
 
 	@Constraints.Required(message="Debe ingresar el genero a quien pertenece")
-	public int genero;//1,masculino/2,femenino/3,unisex/
+	public Integer genero;//1,masculino/2,femenino/3,unisex/
 
 	@Lob
 	public byte[] imagen;
 
 	//@Column(length=3)
 	public String contentTypeImagen;
+
+	public boolean active=true;
+
+	@OneToMany(mappedBy="producto")
+	public List<ProductoJoinOferta> productos_join_oferta;
 
     public static Finder<Long, Producto> find = new Finder<Long,Producto>(Producto.class);
 

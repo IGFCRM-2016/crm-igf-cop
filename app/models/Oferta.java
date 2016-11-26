@@ -1,11 +1,15 @@
 package models;
 
 import java.util.*;
+import java.io.File;
+import java.io.File;
 import javax.persistence.*;
 
 import play.db.ebean.*;
 import play.data.format.*;
 import play.data.validation.*;
+import play.data.*;
+import com.avaje.ebean.*;
 
 import com.avaje.ebean.*;
 
@@ -50,9 +54,10 @@ public class Oferta extends Model{
 
 	//CRITERIOS DE APLICACION DE LA OFERTA
 
-	//@Constraints.Required(message="Debe ingresar el genero del cliente a quien le aparecera la oferta")
-	public int genero;//1,masculino/2,femenino/3,unisex/
+	//@Constraints.Required(message="Debe ingredirect(routes.AgenteMarketingController.ofertas());resar el genero del cliente a quien le aparecera la oferta")
+	public Integer genero;//1,masculino/2,femenino/3,unisex/
 
+	public boolean active;
 	// //@Constraints.Required(message="Debe ingresar el password")
 	// public int compras_minimas;
 
@@ -63,5 +68,14 @@ public class Oferta extends Model{
   	//FIN CRITERIOS DE APLICACION DE LA OFERTA
 
     public static Finder<Long, Oferta> find = new Finder<Long,Oferta>(Oferta.class);
+
+
+
+    public Form<Oferta> getForm(){
+    	Oferta o = Oferta.find.byId(this.id);
+    	Form<Oferta> returning=Form.form(Oferta.class).fill(o);
+    	return returning;
+
+	}//Fin getForm
 
 }
