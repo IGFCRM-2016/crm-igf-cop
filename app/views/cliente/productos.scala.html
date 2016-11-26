@@ -1,4 +1,4 @@
-@(productos_list: List[Producto] )
+@(productos_list: List[Producto], categorias_list: List[Categoria])
 @import helper._
 @css={
    <style type="text/css">
@@ -6,6 +6,7 @@
         margin: 0px !import;
         padding: 0px !import;
        }
+       
    </style>  
 }
 
@@ -13,45 +14,66 @@
     
 }
 
-@cliente.base("Cliente CRM","Productos","Encuentre lo que necesite","productos"){
-	<div class="">
-        <div class="row">
+@extra={
+    <div class="form-inline" style="margin-top: 44px;">
 
-            <div class="col-md-3">
-                <p class="lead">Productos</p>
-                <div class="list-group">
-                    <a href="#" class="list-group-item">Categoria 1</a>
-                    <a href="#" class="list-group-item">Categoria 2</a>
-                    <a href="#" class="list-group-item">Categoria 3</a>
-                </div>
-            </div>
+        <button type="submit" class="btn btn-primary pull-right">Search</button>
+        <input type="text" class="form-control pull-right" maxlength="64" placeholder="Search" />
 
-            <div class="col-md-9">
-
-                
-                <div class="row">
-                @for(producto <- productos_list){
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">                        
-                            <img class="margin0" src="@routes.ClienteController.getProductImage(producto.id)" alt=""  width="320" height="150">                     
-                            
-                            <div class="caption">
-                                <h4 class="pull-right">$ @producto.precio</h4>
-                                <h4><a href="#">@producto.nombre</a>
-                                </h4>
-                                <p>@producto.descripcion</p>
-                                <h4 class="right">Existencias: @producto.existencias</h4>
-
-                            </div>                            
-                        </div>
-                    </div> 
+        <div class="dropdown pull-right" style="margin-right: 5px;">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Categoria<span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                @for(categoria <- categorias_list){
+                    <li><a href="#">@categoria.nombre</a></li>
                 }
-                </div>
+            </ul>
+        </div>  
 
+        <div class="dropdown pull-right " style="margin-right: 5px;">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Genero<span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="#">Hombre</a></li>
+                <li><a href="#">Mujer</a></li>
+                <li><a href="#">Unisex</a></li>
+            </ul>
+        </div>
+
+            
+            
+    </div>
+        
+}
+
+@cliente.base("Cliente CRM","Productos","Encuentre lo que necesite","productos",extra){
+	
+    <div class="row">
+
+
+        <div class="col-md-9">
+
+            
+            <div class="row">
+            @for(producto <- productos_list){
+                <div class="col-sm-4 col-lg-4 col-md-4">
+                    <div class="thumbnail">                        
+                        <img class="margin0" src="@routes.ClienteController.getProductImage(producto.id)" alt=""  width="320" height="150">                     
+                        
+                        <div class="caption">
+                            <h4 class="pull-right">$ @producto.precio</h4>
+                            <h4><a href="#">@producto.nombre</a>
+                            </h4>
+                            <p>@producto.descripcion</p>
+                            <h4 class="right">Existencias: @producto.existencias</h4>
+
+                        </div>                            
+                    </div>
+                </div> 
+            }
             </div>
 
-        </div>            
-    </div>
+        </div>
+
+    </div>            
     <!-- /.container -->
 
 }

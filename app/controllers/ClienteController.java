@@ -22,10 +22,10 @@ import views.html.cliente.*;
 public class ClienteController extends Controller {
 
     public Result productos() {
-		    List<Producto> productos_list = Producto.find.findList();
+        List<Producto> productos_list = Producto.find.findList();
+		List<Categoria> categorias_list = Categoria.find.findList();
         
-        return ok(productos.render(productos_list));
-
+        return ok(productos.render(productos_list,categorias_list));
     }
 
     public Result ofertas() {

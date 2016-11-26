@@ -4,7 +4,7 @@
  * two arguments, a `String` for the title of the page and an `Html`
  * object to insert into the body of the page.
  *@
-@(title: String, opcion: String, descripcion: String, activo: String, css: Html = Html(""), js: Html = Html(""))(content: Html)
+@(title: String, opcion: String, descripcion: String, activo: String, extra: Html = Html(""), css: Html = Html(""), js: Html = Html(""))(content: Html)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -105,10 +105,17 @@
                     <!-- Page Heading -->
                     <div class="row">
                         <div class="col-lg-12">
-                            <h1 class="page-header">
-                                @opcion
-                                <small>@descripcion</small>
-                            </h1>
+                            <div class="col-lg-6">
+                                <h1 class="page-header">
+                                    @opcion
+                                    <small>@descripcion</small>
+                                </h1>
+                            </div>
+                            <div class="col-lg-6" >
+                                
+                                    @extra
+                                
+                            </div>
                             @content
 
                             <div class="well">

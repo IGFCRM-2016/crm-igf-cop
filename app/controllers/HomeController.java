@@ -29,9 +29,9 @@ public class HomeController extends Controller {
      */
     public Result index() {
 
-    	   List<Producto> productos_list = Producto.find.findList();
-    		return ok(index.render(productos_list));
-    	
+       List<Producto> productos_list = Producto.find.findList();
+	   List<Categoria> categorias_list = Categoria.find.findList();
+	   return ok(index.render(productos_list,categorias_list));
         
     }
 
