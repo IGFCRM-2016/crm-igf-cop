@@ -1,4 +1,4 @@
-@(productos_list: List[Producto], categorias_list: List[Categoria])
+@(productos_list: List[Producto], categorias_list: List[Categoria],page: Long)
 @import helper._
 @css={
    <style type="text/css">
@@ -49,10 +49,14 @@
     <div class="row">
 
 
-        <div class="col-md-9">
-
+        <div class="col-md-10">
+            <ul class="pager">
+              <li  class="previous" ><a href ="@routes.ClienteController.getPage(page-1)">&larr; Anterior</a></li>
+              <li class="next"><a href="@routes.ClienteController.getPage(page+1)">Siguiente &rarr;</a></li>
+            </ul>
             
             <div class="row">
+            
             @for(producto <- productos_list){
                 <div class="col-sm-4 col-lg-4 col-md-4">
                     <div class="thumbnail">                        
@@ -63,14 +67,21 @@
                             <h4><a href="#">@producto.nombre</a>
                             </h4>
                             <p>@producto.descripcion</p>
-                            <h4 class="right">Existencias: @producto.existencias</h4>
-
+                            <div class="row">
+                                
+                                <h5 class="right col-md-9">Existencias: @producto.existencias</h5>
+                                <button class="col-md-2 btn btn-warning"><span class="glyphicon glyphicon-shopping-cart"></span></button>  
+                            </div>
                         </div>                            
                     </div>
                 </div> 
             }
+            
             </div>
-
+                <ul class="pager">
+              <li  class="previous" ><a href ="@routes.ClienteController.getPage(page-1)">&larr; Anterior</a></li>
+              <li class="next"><a href="@routes.ClienteController.getPage(page+1)">Siguiente &rarr;</a></li>
+            </ul>
         </div>
 
     </div>            

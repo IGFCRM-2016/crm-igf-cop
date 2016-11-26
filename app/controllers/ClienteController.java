@@ -22,10 +22,8 @@ import views.html.cliente.*;
 public class ClienteController extends Controller {
 
     public Result productos() {
-        List<Producto> productos_list = Producto.find.findList();
-		List<Categoria> categorias_list = Categoria.find.findList();
-        
-        return ok(productos.render(productos_list,categorias_list));
+              
+        return redirect(routes.ClienteController.getPage(0));
     }
 
     public Result ofertas() {
@@ -60,6 +58,19 @@ public class ClienteController extends Controller {
         }
 
         return ok();
+    }
+
+       public Result getPage(Long page){
+        if (page<0){
+            return redirect(routes.ClienteController.getPage(0));
+        }
+       int page_size=9;
+       List<Producto> prods = Producto.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+       List<Categoria> categorias_list = Categoria.find.findList();
+       
+       return ok(productos.render(prods,categorias_list,page));
+        
+
     }
     
 

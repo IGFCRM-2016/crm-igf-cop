@@ -22,6 +22,7 @@ GET	/incidentes	controllers.ClienteController.incidentes
 GET	/carretilla	controllers.ClienteController.carretilla
 GET	/chat	controllers.ClienteController.chat
 GET /productos/image/:id controllers.ClienteController.getProductImage(id: Long)
+GET /productos/page/:page controllers.ClienteController.getPage(page: Long)
 
 
 
