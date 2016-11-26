@@ -11,8 +11,7 @@ GET	/register	controllers.HomeController.register
 POST /register	controllers.HomeController.register_post
 GET	/about	controllers.HomeController.about
 GET /productos/image/:id controllers.HomeController.getProductImage(id: Long)
-
-
+GET /page/:page controllers.HomeController.getPage(page: Long)
 
 
 

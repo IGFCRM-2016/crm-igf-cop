@@ -29,9 +29,7 @@ public class HomeController extends Controller {
      */
     public Result index() {
 
-       List<Producto> productos_list = Producto.find.findList();
-	   List<Categoria> categorias_list = Categoria.find.findList();
-	   return ok(index.render(productos_list,categorias_list));
+	   return redirect(routes.HomeController.getPage(0));
         
     }
 
@@ -190,6 +188,19 @@ public class HomeController extends Controller {
         }
 
         return ok();
+    }
+
+   public Result getPage(Long page){
+        if (page<0){
+            return redirect(routes.HomeController.getPage(0));
+        }
+       int page_size=9;
+       List<Producto> prods = Producto.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+       List<Categoria> categorias_list = Categoria.find.findList();
+       
+       return ok(index.render(prods,categorias_list,page));
+        
+
     }
 
 }
