@@ -250,7 +250,20 @@ public class AgenteMarketingController extends Controller {
     }
 
 	public Result oferta_remove(Long id){
-		return redirect(routes.AgenteMarketingController.ofertas());
+		Oferta oferta = Oferta.find.byId(id);
+        if(oferta != null){
+            try{
+                oferta.delete();
+                flash("exito","Operacion exitosa!");
+            }catch(javax.persistence.PersistenceException e){
+                flash("global_error","No es posible eliminar, Oferta esta siendo usado!");
+                return redirect(routes.AgenteMarketingController.ofertas());
+            }
+            
+            return redirect(routes.AgenteMarketingController.ofertas());
+        }
+        flash("global_error","Oferta a eliminar invalido.");
+        return redirect(routes.AgenteMarketingController.ofertas());
 	}
 
 	public Result getOfertaImage(Long id){

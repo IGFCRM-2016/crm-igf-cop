@@ -106,6 +106,14 @@
 	}
 
 
+	@if(flash.containsKey("global_error")){
+		<div class="alert alert-danger fade in">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+			<strong>@flash.get("global_error")</strong>
+		</div>
+	}
+
   	<!-- Modal -->
 	<div class="modal fade" id="mod-new" role="dialog">
 

@@ -33,7 +33,7 @@ public class Producto extends Model{
 	@Constraints.Required(message="Debe ingresar una cantidad de existencias inicial")
 	public int existencias;
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
 	public Categoria categoria;
 
 	@Constraints.Required(message="Debe ingresar el genero a quien pertenece")

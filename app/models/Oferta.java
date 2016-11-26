@@ -57,7 +57,7 @@ public class Oferta extends Model{
 	//@Constraints.Required(message="Debe ingredirect(routes.AgenteMarketingController.ofertas());resar el genero del cliente a quien le aparecera la oferta")
 	public Integer genero;//1,masculino/2,femenino/3,unisex/
 
-	public boolean active;
+	public boolean active=true;
 	// //@Constraints.Required(message="Debe ingresar el password")
 	// public int compras_minimas;
 

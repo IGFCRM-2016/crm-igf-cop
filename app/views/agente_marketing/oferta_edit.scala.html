@@ -215,7 +215,7 @@
 									</thead>
 									<tbody>
 										@for(producto <- productos_list){<!-- productos a incluir en la oferta-->
-											<tr>
+											<tr @if(productos_selected.contains(producto)){ class="warning" }>
 												<td>@producto.codigo</td>
 												<td height="90"><img src="@routes.AdministradorController.getProductImage(producto.id)" class="img-thubnail"  width="75"/></td>
 												<td>@producto.nombre</td>

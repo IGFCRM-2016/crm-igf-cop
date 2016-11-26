@@ -238,10 +238,18 @@ public class AdministradorController extends Controller {
     public Result producto_remove(Long id){
         Producto prod = Producto.find.byId(id);
         if(prod != null){
-            prod.delete();
-            flash("exito","Operacion exitosa!");
+            try{
+                prod.delete();
+                flash("exito","Operacion exitosa!");
+            }catch(javax.persistence.PersistenceException e){
+                flash("global_error","No es posible eliminar, Producto esta siendo usado!");
+                e.printStackTrace();
+                return redirect(routes.AdministradorController.productos());
+            }
+            
             return redirect(routes.AdministradorController.productos());
         }
+        flash("global_error","Producto a eliminar invalido.");
         return redirect(routes.AdministradorController.productos());
     }
 
