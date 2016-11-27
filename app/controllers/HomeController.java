@@ -203,4 +203,35 @@ public class HomeController extends Controller {
 
     }
 
+
+    public Result getOfferImage(Long id){
+
+        try {
+            Oferta offer = Oferta.find.byId(id);
+            InputStream input = new ByteArrayInputStream(offer.imagen);
+            java.awt.image.BufferedImage image =  javax.imageio.ImageIO.read(input);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            javax.imageio.ImageIO.write(image,offer.contentTypeImagen.split("/")[1],baos);
+
+            return ok(baos.toByteArray()).as(offer.contentTypeImagen);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return ok();
+    }
+    /*Paginador para ofertas*/
+     public Result getOfferPage(Long page){
+        if (page<0){
+            return redirect(routes.HomeController.getOfferPage(0));
+        }
+       int page_size=9;
+       List<Oferta> offer = Oferta.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+       List<Categoria> categorias_list = Categoria.find.findList();
+       
+       return ok(ofertas.render(offer,categorias_list,page));
+        
+
+    }
 }

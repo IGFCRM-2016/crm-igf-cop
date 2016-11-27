@@ -44,7 +44,13 @@
             </div>
 
         </div> 
-            <div class="form-inline row" style="margin-top: 44px;">
+        <div class="row" style="margin-bottom: 9px;">
+             <div class="col-md-4 col-md-push-0" style="margin-top: 5px;"">
+                 <a class="btn btn-success" href="@routes.HomeController.getPage(0)"> Productos</a>
+                 <a class="btn btn-success" href="@routes.HomeController.getOfferPage(0)"> Ofertas</a>
+
+             </div>
+            <div class="form-inline col-md-7 col-md-push-1" style="margin-top: 5px;">
                 <button type="submit" class="btn btn-primary pull-right">Search</button>
                 <input type="text" class="form-control pull-right" maxlength="64" placeholder="Search" />
                 <div class="dropdown pull-right" style="margin-right: 5px;">
@@ -68,9 +74,10 @@
                     </ul>
                 </div>
             </div>
+        </div>
             <ul class="pager">
                
-              <li  class="previous" ><a href ="@routes.HomeController.getPage(page-1)">&larr; Anterior</a></li>
+              <li  class="previous" ><a  href ="@routes.HomeController.getPage(page-1)">&larr; Anterior</a></li>
               <li class="next"><a href="@routes.HomeController.getPage(page+1)">Siguiente &rarr;</a></li>
             </ul>             
             <div class="row">
