@@ -23,6 +23,8 @@ GET	/carretilla	controllers.ClienteController.carretilla
 GET	/chat	controllers.ClienteController.chat
 GET /productos/image/:id controllers.ClienteController.getProductImage(id: Long)
 GET /productos/page/:page controllers.ClienteController.getPage(page: Long)
+GET /ofertas/image/:id controllers.ClienteController.getOfferImage(id: Long)
+GET /ofertas/page/:page controllers.ClienteController.getOfferPage(page: Long)
 
 
 

@@ -1,128 +1,85 @@
-@cliente.base("Cliente CRM","Ofertas","Las mejores ofertas solo para ti","ofertas"){
-	<div class="row">
+@(ofertas_list: List[Oferta], categorias_list: List[Categoria],page: Long)
+@import helper._
+@css={ 
+}
 
+@js={
+    
+}
 
-        <div class="col-md-9">
+@extra={
+    <div class="form-inline" style="margin-top: 44px;">
 
-            
-            <div class="row">
+        <button type="submit" class="btn btn-primary pull-right">Search</button>
+        <input type="text" class="form-control pull-right" maxlength="64" placeholder="Search" />
 
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4 class="pull-right">$24.99</h4>
-                            <h4><a href="#">Producto 1</a>
-                            </h4>
-                            <p>Esta es una brebe descripcion del producto.</p>
-                        </div>
-                        <div class="ratings">
-                            <p class="pull-right">15 existencias</p>
-                            <p>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        <div class="dropdown pull-right" style="margin-right: 5px;">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Categoria<span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                @for(categoria <- categorias_list){
+                    <li><a href="#">@categoria.nombre</a></li>
+                }
+            </ul>
+        </div>  
 
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4 class="pull-right">$64.99</h4>
-                            <h4><a href="#">Producto 2</a>
-                            </h4>
-                            <p>Esta es una brebe descripcion del producto.</p>
-                        </div>
-                        <div class="ratings">
-                            <p class="pull-right">12 existencias</p>
-                            <p>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4 class="pull-right">$74.99</h4>
-                            <h4><a href="#">Producto 3</a>
-                            </h4>
-                            <p>Esta es una brebe descripcion del producto.</p>
-                        </div>
-                        <div class="ratings">
-                            <p class="pull-right">31 existencias</p>
-                            <p>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4 class="pull-right">$84.99</h4>
-                            <h4><a href="#">Producto 4</a>
-                            </h4>
-                            <p>Esta es una brebe descripcion del producto.</p>
-                        </div>
-                        <div class="ratings">
-                            <p class="pull-right">6 existencias</p>
-                            <p>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4 class="pull-right">$94.99</h4>
-                            <h4><a href="#">Product 5</a>
-                            </h4>
-                            <p>Esta es una brebe descripcion del producto.</p>
-                        </div>
-                        <div class="ratings">
-                            <p class="pull-right">18 existencias</p>
-                            <p>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star-empty"></span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                
-
-            </div>
-
+        <div class="dropdown pull-right " style="margin-right: 5px;">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Genero<span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="#">Hombre</a></li>
+                <li><a href="#">Mujer</a></li>
+                <li><a href="#">Unisex</a></li>
+            </ul>
         </div>
 
-    </div>   
+            
+            
+    </div>
+        
+}
 
+@cliente.base("Cliente CRM","Ofertas","Encuentre lo que necesite","ofertas",extra){
+    <div class="row">
+        <div class="col-md-10 col-md-push-1">
+            <ul class="pager">
+              <li  class="previous" ><a href ="@routes.ClienteController.getOfferPage(page-1)">&larr; Anterior</a></li>
+              <li class="next"><a href="@routes.ClienteController.getOfferPage(page+1)">Siguiente &rarr;</a></li>
+            </ul>
+            
+            <div class="row">
+            
+            @for((oferta,index) <- ofertas_list.zipWithIndex){
+                @if(3%(index+1)==0 && index!=0){
+                <div class="row">
+                
+                }
+                <div class="col-sm-4 col-lg-4 col-md-4">
+                    <div class="thumbnail">                        
+                        <img class="margin0" src="@routes.ClienteController.getOfferImage(oferta.id)" alt=""  width="320" height="150">                     
+                        
+                        <div class="caption">
+                            <h4 class="pull-right">$ @oferta.precio</h4>
+                            <h4><a href="#">@oferta.nombre</a>
+                            </h4>
+                            <p>@oferta.descripcion</p>
+                            <div class="row">
+                                
+                                <h5 class="right col-md-9">Hasta @oferta.fecha_fin</h5>
+                                <button class="col-md-2 btn btn-warning"><span class="glyphicon glyphicon-shopping-cart"></span></button>  
+                            </div>
+
+                        </div>                            
+                    </div>
+                </div>
+                @if(3%(index+1)==0 && index!=0){
+                </div> 
+                }
+            }
+            
+            </div>
+                <ul class="pager">
+                  <li  class="previous" ><a href ="@routes.ClienteController.getOfferPage(page-1)">&larr; Anterior</a></li>
+                  <li class="next"><a href="@routes.ClienteController.getOfferPage(page+1)">Siguiente &rarr;</a></li>
+                </ul> 
+        </div>
+    </div>
 }
