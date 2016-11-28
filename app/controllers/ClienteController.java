@@ -173,7 +173,40 @@ public class ClienteController extends Controller {
 
 
     public Result compras(){
-        List<Compra> compras_list = Compra.find.where().eq("cliente.username",session("username")).findList();
+        // List<Compra> compras_list =null;
+
+        // Map<String, String[]> values = request().body().asFormUrlEncoded();
+
+        // //String fecha=values.get("fecha")[0];
+        // final Set<Map.Entry<String,String[]>> entries = request().queryString().entrySet();
+        // String fecha = null;
+        // if(fecha!=null){
+        //     java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy");
+        //     fecha=fecha.replace("-","/");
+        //     fecha="01/"+fecha;
+
+        //     Date inicio = new Date();
+
+        //     try{
+        //         inicio = dateFormat.parse(fecha);
+        //     }catch(Exception e){
+        //         e.printStackTrace();
+        //     }
+            
+
+
+        //     Calendar c = Calendar.getInstance();
+        //     c.setTime(inicio);
+        //     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        //     Date fin = c.getTime();
+
+        //     //compras_list=Compra.find.where().conjunction().eq("cliente.username",session("username")).ge("fecha",inicio).le("fecha",fin).findList();
+
+
+        // }else{
+            List<Compra> compras_list=Compra.find.where().eq("cliente.username",session("username")).findList();
+        //}
+
         return ok(compras.render(compras_list));
     }
 
