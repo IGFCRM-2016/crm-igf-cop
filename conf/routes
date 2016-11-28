@@ -3,52 +3,54 @@
 # ~~~~
 
 # Rutas del HomeController
-GET	/	controllers.HomeController.index
-GET	/login	controllers.HomeController.login
-POST	/login	controllers.HomeController.login_post
-GET	/logout	controllers.HomeController.logout
-GET	/register	controllers.HomeController.register
-POST /register	controllers.HomeController.register_post
-GET	/about	controllers.HomeController.about
-GET /productos/image/:id controllers.HomeController.getProductImage(id: Long)
-GET /productos/page/:page controllers.HomeController.getPage(page: Long)
-GET /ofertas/image/:id controllers.HomeController.getOfferImage(id: Long)
-GET /ofertas/page/:page controllers.HomeController.getOfferPage(page: Long, nombre ?= null, categoria: java.lang.Long ?= null, genero: java.lang.Long ?= null)
+GET			/							controllers.HomeController.index
+GET			/login						controllers.HomeController.login
+POST 		/login						controllers.HomeController.login_post
+GET			/logout						controllers.HomeController.logout
+GET			/register					controllers.HomeController.register
+POST 		/register					controllers.HomeController.register_post
+GET			/about						controllers.HomeController.about
+GET 		/productos/image/:id 		controllers.HomeController.getProductImage(id: Long)
+GET 		/ofertas/image/:id 			controllers.HomeController.getOfferImage(id: Long)
+GET 		/productos 					controllers.HomeController.productos()
+GET 		/ofertas 					controllers.HomeController.ofertas()
+GET 		/productos/page/:page 		controllers.HomeController.getProductPage(page: Long, nombre ?= null, categoria: java.lang.Long ?= null, genero: java.lang.Long ?= null)
+GET 		/ofertas/page/:page 		controllers.HomeController.getOfferPage(page: Long, nombre ?= null, categoria: java.lang.Long ?= null, genero: java.lang.Long ?= null)
 
 
 
 # Rutas del ClienteController
-GET	/productos	controllers.ClienteController.productos
-GET	/ofertas	controllers.ClienteController.ofertas
-GET	/incidentes	controllers.ClienteController.incidentes
-GET	/carretilla	controllers.ClienteController.carretilla
-GET	/chat	controllers.ClienteController.chat
-GET /client/productos/image/:id controllers.ClienteController.getProductImage(id: Long)
-GET /client/productos/page/:page controllers.ClienteController.getPage(page: Long)
-GET /client/ofertas/image/:id controllers.ClienteController.getOfferImage(id: Long)
-GET /client/ofertas/page/:page controllers.ClienteController.getOfferPage(page: Long)
+GET			/client/productos					controllers.ClienteController.productos
+GET			/client/ofertas						controllers.ClienteController.ofertas
+GET			/client/incidentes					controllers.ClienteController.incidentes
+GET			/client/carretilla					controllers.ClienteController.carretilla
+GET			/client/chat						controllers.ClienteController.chat
+GET 		/client/productos/image/:id 		controllers.ClienteController.getProductImage(id: Long)
+GET 		/client/productos/page/:page 		controllers.ClienteController.getPage(page: Long)
+GET 		/client/ofertas/image/:id 			controllers.ClienteController.getOfferImage(id: Long)
+GET 		/client/ofertas/page/:page 			controllers.ClienteController.getOfferPage(page: Long)
 
 
 
 # Rutas del ChatController
-GET     /wsInterface/:username               controllers.ChatController.wsInterface(username: String)
-GET     /assets.javascript.ws.js           controllers.ChatController.wsJs()
+GET     	/wsInterface/:username              controllers.ChatController.wsInterface(username: String)
+GET     	/assets.javascript.ws.js           	controllers.ChatController.wsJs()
 
 
 
 
 # Rutas del AgenteServicioController
-GET	/servicio/incidencias	controllers.AgenteServicioController.incidencias
-GET	/servicio/chat	controllers.AgenteServicioController.chat
+GET				/servicio/incidencias			controllers.AgenteServicioController.incidencias
+GET				/servicio/chat					controllers.AgenteServicioController.chat
 
 
 # Rutas del AgenteMarketingController
-GET	/marketing/ofertas	controllers.AgenteMarketingController.ofertas
-POST /marketing/ofertas/new controllers.AgenteMarketingController.oferta_new
-GET /marketing/ofertas/edit/:id controllers.AgenteMarketingController.oferta_edit(id: Long)
-POST /marketing/ofertas/edit/:id controllers.AgenteMarketingController.oferta_edit_post(id: Long)
-POST /marketing/ofertas/remove/:id controllers.AgenteMarketingController.oferta_remove(id: Long)
-GET /marketing/ofertas/image/:id controllers.AgenteMarketingController.getOfertaImage(id: Long)
+GET				/marketing/ofertas						controllers.AgenteMarketingController.ofertas
+POST 			/marketing/ofertas/new 					controllers.AgenteMarketingController.oferta_new
+GET 			/marketing/ofertas/edit/:id 			controllers.AgenteMarketingController.oferta_edit(id: Long)
+POST 			/marketing/ofertas/edit/:id 			controllers.AgenteMarketingController.oferta_edit_post(id: Long)
+POST 			/marketing/ofertas/remove/:id 			controllers.AgenteMarketingController.oferta_remove(id: Long)
+GET 			/marketing/ofertas/image/:id 			controllers.AgenteMarketingController.getOfertaImage(id: Long)
 
 
 

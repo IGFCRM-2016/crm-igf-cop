@@ -39,18 +39,29 @@ public class ClienteController extends Controller {
         //ystem.out.println(request().headers().get("Cookie"));
 
         //System.out.println(request().cookies().get("prod0").value());
+        ArrayList<Long> productos=new ArrayList<Long>();
+        ArrayList<Long> ofertas=new ArrayList<Long>();
 
         String cookies_strings[] = request().headers().get("Cookie");
         if(cookies_strings!=null){
             for (String cookieStr : cookies_strings) {
                 //String name = cookieStr.substring(0, cookieStr.indexOf("="));
-
+                System.out.println(cookieStr);
                 String cookies[] = cookieStr.split(";");
 
                 for(int i=0;i<cookies.length;i++){
                     cookies[i].trim();
                     String name = cookies[i].substring(0, cookies[i].indexOf("="));
+                    String value = cookies[i].substring(cookies[i].indexOf("=")+1);
                     Logger.info("Name of the cookie : " + name);
+                    Logger.info("Value of the cookie : " + value);
+
+                    if(value.startsWith("p")){
+                        productos.add(Long.valueOf(value.substring(1)));
+                    }
+                    if(value.startsWith("o")){
+                        productos.add(Long.valueOf(value.substring(1)));
+                    }
                 }
 
                 
@@ -58,15 +69,23 @@ public class ClienteController extends Controller {
                // Cookie cookie = request.cookie(name); // Get the instance of the cookie !
             }
         }
-        
 
-        //System.out.println(request().cookies().size());
-        // for(play.mvc.Http.Cookie c: response().cookies()){
-        //     System.out.println(c.value());
-        // }
-        //System.out.println(request().queryString());
-        List<Producto> productos_list=Producto.find.findList();
-        List<Oferta> ofertas_list=Oferta.find.findList();
+        List<Producto> productos_list= new ArrayList<Producto>();
+        List<Oferta> ofertas_list= new ArrayList<Oferta>();
+        
+       
+        for(Long c : productos){
+            productos_list.add(Producto.find.byId(c));
+        }
+
+        for(Long c : ofertas){
+            ofertas_list.add(Oferta.find.byId(c));
+        }
+
+        System.out.println(productos_list.size());
+        System.out.println(ofertas_list.size());
+        
+        
 
     	return ok(carretilla.render(productos_list,ofertas_list));
     }
@@ -93,17 +112,15 @@ public class ClienteController extends Controller {
         return ok();
     }
 
-       public Result getPage(Long page){
+    public Result getPage(Long page){
         if (page<0){
             return redirect(routes.ClienteController.getPage(0));
         }
-       int page_size=9;
-       List<Producto> prods = Producto.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
-       List<Categoria> categorias_list = Categoria.find.findList();
+        int page_size=9;
+        List<Producto> prods = Producto.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+        List<Categoria> categorias_list = Categoria.find.findList();
        
-       return ok(productos.render(prods,categorias_list,page));
-        
-
+        return ok(productos.render(prods,categorias_list,page));
     }
     
     public Result getOfferImage(Long id){

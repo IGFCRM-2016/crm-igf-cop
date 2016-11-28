@@ -19,7 +19,7 @@ function addToShopingCar(producto_id) {
 
     if(!agregado){//si no esta agregado lo agregamos
         var cookie_name = "prod"+cookies.length;
-        document.cookie =  cookie_name + "=" + encodeURIComponent( producto_id );
+        document.cookie =  cookie_name + "=" + encodeURIComponent( producto_id ) + ";path=/";
         shopingCountCarNotify();
 
         $.notify("Elemento agregado a la carretilla :).", "success");
@@ -36,7 +36,7 @@ function removeToShopingCar(producto_id) {
         var key = cookie.split('=')[0];
         var value = cookie.split('=')[1];
         if(value==producto_id){
-            document.cookie = key + "=;" + "max-age=0";
+            document.cookie = key + "=;" + "max-age=0" + ";path=/";
             $.notify("Elemento retirado de la carretilla.", "info");
         }
     }

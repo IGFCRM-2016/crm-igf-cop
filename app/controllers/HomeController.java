@@ -29,7 +29,7 @@ public class HomeController extends Controller {
      */
     public Result index() {
 
-	   return redirect(routes.HomeController.getPage(0));
+	   return redirect(routes.HomeController.getProductPage(0,null,null,null));
         
     }
 
@@ -190,13 +190,115 @@ public class HomeController extends Controller {
         return ok();
     }
 
-   public Result getPage(Long page){
+    public Result productos(){
+        return redirect(routes.HomeController.getProductPage(0,null,null,null));
+    }
+
+    public Result getProductPage(Long page,String n,java.lang.Long c, java.lang.Long g){
+
+        int page_size=9;
+
+        String nombre= n;
+        Long categoria= c;
+        Long genero = g;
+
+
+
+        List<Producto> prods = null;
+
         if (page<0){
-            return redirect(routes.HomeController.getPage(0));
+            return redirect(routes.HomeController.getProductPage(Long.valueOf(0),n,c,g));
         }
-       int page_size=9;
-       List<Producto> prods = Producto.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
-       List<Categoria> categorias_list = Categoria.find.findList();
+
+        if (genero!=null) {
+            if (categoria!=null ) {
+                if (nombre!=null ) {
+                    //filtrar por genero categoria y nombre
+                    com.avaje.ebean.Query<Producto> query = Ebean.find(Producto.class);
+                    com.avaje.ebean.ExpressionList<models.Producto> el = query.where().conjunction().disjunction();
+                    for(String word : nombre.split(" ")){
+                        el.icontains("nombre",word);
+                    }
+                    el.endJunction().eq("categoria.id",categoria).eq("genero",genero).endJunction();
+                    prods = el.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }else{
+                    /*Filtrar por genero y categoria*/
+                    prods = Producto.find.where().conjunction().eq("categoria.id",categoria).eq("genero",genero).orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }
+            }else{
+                if (nombre!=null) {
+                    /*Filtrar por genero y nombre*/
+                    com.avaje.ebean.Query<Producto> query = Ebean.find(Producto.class);
+                    com.avaje.ebean.ExpressionList<models.Producto> el = query.where().conjunction().disjunction();
+                    for(String word : nombre.split(" ")){
+                        el.icontains("nombre",word);
+                    }
+                    el.endJunction().eq("genero",genero).endJunction();
+                    prods = el.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }else{
+                    /*Filtrar por genero*/
+                    prods = Producto.find.where().eq("genero",genero).orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }
+            }   
+        }else{
+            if (categoria!=null ) {
+                if (nombre!=null ) {
+                    //filtrar por categoria y nombre
+                    com.avaje.ebean.Query<Producto> query = Ebean.find(Producto.class);
+                    com.avaje.ebean.ExpressionList<models.Producto> el = query.where().conjunction().disjunction();
+                    for(String word : nombre.split(" ")){
+                        el.icontains("nombre",word);
+                    }
+                    el.endJunction().eq("categoria.id",categoria).endJunction();
+                    prods = el.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }else{
+                    /*Filtrar por categoria*/
+                    prods = Producto.find.where().eq("categoria.id",categoria).orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }
+            }else{
+                if (nombre!=null) {
+                /*Filtrar por nombre*/
+                    com.avaje.ebean.Query<Producto> query = Ebean.find(Producto.class);
+                    com.avaje.ebean.ExpressionList<models.Producto> el = query.where().disjunction();
+                    for(String word : nombre.split(" ")){
+                        System.out.println(word);
+                        el.icontains("nombre",word);
+                    }
+                    prods = el.endJunction().orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }else{
+                    /*No hay filtro*/
+                    prods = Producto.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }
+            } 
+        }
+
+        List<Categoria> categorias_list = Categoria.find.findList();
+       //offer = Oferta.find.where().eq("nombre","Juego de sala").orderBy("id").findPagedList(page.intValue(),page_size).getList();
+       if(nombre!=null){
+            flash("filter","?");
+            flash("nom",nombre);
+       }
+       if(categoria!=null){
+            flash("filter","?");
+            flash("cat",Long.valueOf(categoria).toString());
+            flash("catn",Categoria.find.where().eq("id",categoria).findUnique().nombre);
+       }
+       if(genero!=null){
+            flash("filter","?");
+            flash("gen",Long.valueOf(genero).toString());
+            switch(genero.intValue()){
+                case 1:
+                    flash("genn","Masculino");
+                break;
+                case 2:
+                    flash("genn","Femenino");
+                break;
+                case 3:
+                    flash("genn","Unisex");
+                break;
+            }
+       }
+
        
        return ok(index.render(prods,categorias_list,page));
         
@@ -221,9 +323,14 @@ public class HomeController extends Controller {
 
         return ok();
     }
+
+    public Result ofertas(){
+        return redirect(routes.HomeController.getOfferPage(0,null,null,null));
+    }
+
     /*Paginador para ofertas*/
-     public Result getOfferPage(Long page,String n,java.lang.Long c, java.lang.Long g){
-       int page_size=2;
+    public Result getOfferPage(Long page,String n,java.lang.Long c, java.lang.Long g){
+       int page_size=9;
 
        String nombre= n;
        Long categoria= c;
@@ -353,10 +460,22 @@ public class HomeController extends Controller {
        if(categoria!=null){
             flash("filter","?");
             flash("cat",Long.valueOf(categoria).toString());
+            flash("catn",Categoria.find.where().eq("id",categoria).findUnique().nombre);
        }
        if(genero!=null){
             flash("filter","?");
             flash("gen",Long.valueOf(genero).toString());
+            switch(genero.intValue()){
+                case 1:
+                    flash("genn","Masculino");
+                break;
+                case 2:
+                    flash("genn","Femenino");
+                break;
+                case 3:
+                    flash("genn","Unisex");
+                break;
+            }
        }
 
        

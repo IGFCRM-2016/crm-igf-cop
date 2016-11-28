@@ -79,37 +79,36 @@ public class AgenteMarketingController extends Controller {
         		
         		if(!cats.contains(p.categoria.id)){
         			cats.add(p.categoria.id);
+                    System.out.println("adding cat: "+p.categoria.id);
         		}
 
         		if(!gens.contains(p.genero)){
         			gens.add(p.genero);
         		}
         	}
+        }
 
-        	//aqui mismo manejamos lo de  las categorias y genero de la oferta
-            //aqui manejamos manejamos lo de  las categorias y genero de la oferta
-            for(Long c : cats){
-                AplicacionOferta ao=new AplicacionOferta();
-                ao.oferta=nueva;
-                ao.categoria=Categoria.find.byId(c);
-                nueva.aplicaciones_oferta.add(ao);
-            }
+        //aqui mismo manejamos lo de  las categorias y genero de la oferta
+        //aqui manejamos manejamos lo de  las categorias y genero de la oferta
+        for(Long c : cats){
+            AplicacionOferta ao=new AplicacionOferta();
+            ao.categoria=Categoria.find.byId(c);
+            ao.oferta=nueva;
+            nueva.aplicaciones_oferta.add(ao);
+        }
 
-            if( gens.contains(Integer.valueOf(1)) && gens.contains(Integer.valueOf(2)) || gens.contains(Integer.valueOf(3)) ){
-                //es oferta unisex
-                nueva.genero=3;
+        if( gens.contains(Integer.valueOf(1)) && gens.contains(Integer.valueOf(2)) || gens.contains(Integer.valueOf(3)) ){
+            //es oferta unisex
+            nueva.genero=3;
+        }else{
+            if(gens.contains(Integer.valueOf(1))){
+                //es oferta para hombre
+                nueva.genero=1;
             }else{
-                if(gens.contains(Integer.valueOf(1))){
-                    //es oferta para hombre
-                    nueva.genero=1;
-                }else{
-                    //es oferta para mujer
-                    System.out.println(gens.contains(Integer.valueOf(2)));
-                    nueva.genero=2;
-                }
+                //es oferta para mujer
+                System.out.println(gens.contains(Integer.valueOf(2)));
+                nueva.genero=2;
             }
-
-
         }
 
         nueva.save();

@@ -22,4 +22,6 @@ public class AplicacionOferta extends Model{
 	@ManyToOne
 	public Categoria categoria;
 
+    public static Finder<Long, ProductoJoinOferta> find = new Finder<Long,ProductoJoinOferta>(ProductoJoinOferta.class);
+	
 }
