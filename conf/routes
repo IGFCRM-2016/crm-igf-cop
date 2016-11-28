@@ -13,7 +13,7 @@ GET	/about	controllers.HomeController.about
 GET /productos/image/:id controllers.HomeController.getProductImage(id: Long)
 GET /productos/page/:page controllers.HomeController.getPage(page: Long)
 GET /ofertas/image/:id controllers.HomeController.getOfferImage(id: Long)
-GET /ofertas/page/:page controllers.HomeController.getOfferPage(page: Long)
+GET /ofertas/page/:page controllers.HomeController.getOfferPage(page: Long, nombre ?= null, categoria: java.lang.Long ?= null, genero: java.lang.Long ?= null)
 
 
 

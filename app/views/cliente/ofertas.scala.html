@@ -52,14 +52,12 @@
                 <div class="col-sm-4 col-lg-4 col-md-4">
                     <div class="thumbnail">                        
                         <img class="margin0" src="@routes.ClienteController.getOfferImage(oferta.id)" alt=""  width="320" height="150">                     
-                        
                         <div class="caption">
                             <h4 class="pull-right">$ @oferta.precio</h4>
                             <h4><a href="#">@oferta.nombre</a>
                             </h4>
                             <p>@oferta.descripcion</p>
                             <div class="row">
-                                
                                 <h5 class="right col-md-9">Hasta: @oferta.fecha_fin.format("dd")/@oferta.fecha_fin.format("MM")</h5>
                                 <button class="col-md-2 btn btn-warning"><span class="glyphicon glyphicon-shopping-cart"></span></button>  
                             </div>

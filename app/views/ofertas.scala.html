@@ -22,7 +22,7 @@
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Categoria<span class="caret"></span></button>
             <ul class="dropdown-menu">
                 @for(categoria <- categorias_list){
-                    <li><a href="#">@categoria.nombre</a></li>
+                    <li><a href='@routes.HomeController.getOfferPage(0,if(flash.containsKey("nom")){flash.get("nom")}else{null},categoria.id,if(flash.containsKey("gen")){flash.get("gen").toLong}else{null})'>@categoria.nombre</a></li>
                 }
             </ul>
         </div>  
@@ -43,8 +43,8 @@
     <div class="row">
         <div class="col-md-10 col-md-push-1">
             <ul class="pager">
-              <li  class="previous" ><a href ="@routes.HomeController.getOfferPage(page-1)">&larr; Anterior</a></li>
-              <li class="next"><a href="@routes.HomeController.getOfferPage(page+1)">Siguiente &rarr;</a></li>
+              <li  class="previous" ><a href ='@routes.HomeController.getOfferPage(page-1)@if(flash.containsKey("filter")){?}@if(flash.containsKey("nom")){nombre=@flash.get("nom")&}@if(flash.containsKey("cat")){categoria=@flash.get("cat")&}@if(flash.containsKey("gen")){genero=@flash.get("gen")&}'>&larr; Anterior</a></li>
+              <li class="next"><a href='@routes.HomeController.getOfferPage(page+1)@if(flash.containsKey("filter")){?}@if(flash.containsKey("nom")){nombre=@flash.get("nom")&}@if(flash.containsKey("cat")){categoria=@flash.get("cat")&}@if(flash.containsKey("gen")){genero=@flash.get("gen")&}'>Siguiente &rarr;</a></li>
             </ul>
            
             

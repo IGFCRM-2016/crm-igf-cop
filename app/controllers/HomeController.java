@@ -222,13 +222,143 @@ public class HomeController extends Controller {
         return ok();
     }
     /*Paginador para ofertas*/
-     public Result getOfferPage(Long page){
+     public Result getOfferPage(Long page,String n,java.lang.Long c, java.lang.Long g){
+       int page_size=2;
+
+       String nombre= n;
+       Long categoria= c;
+       Long genero = g;
+
+
+       // try{
+       //      categoria = Long.valueOf(c);
+       // }catch(Exception e){
+       //      Long categoria=null;
+       // }
+       // try{
+       //      genero = Long.valueOf(g);
+       // }catch(Exception e){
+       //      Long genero =null;
+       // }
+       
+
+       // final Set<Map.Entry<String,String[]>> entries = request().queryString().entrySet();
+       
+       // for (Map.Entry<String,String[]> entry:entries) {
+       //     final String key = entry.getKey();
+
+       //     if (key.equals("nombre")) {
+       //         nombre =entry.getValue()[0];
+       //     }
+       //     if (key.equals("genero")) {
+       //          if(!entry.getValue()[0].trim().equals("")){
+       //              try{
+       //                  genero =Long.valueOf(entry.getValue()[0]);
+       //              }catch(Exception e){
+       //                  genero = null;
+       //              }
+       //          }
+       //     }
+       //     if (key.equals("categoria")) {
+       //          if(!entry.getValue()[0].trim().equals("")){
+       //              try{
+       //                  categoria =Long.valueOf(entry.getValue()[0]);
+       //              }catch(Exception e){
+       //                  categoria=null;
+       //              }
+       //          }
+       //     }
+       // }
+
+
+
+       List<Oferta> offer = null;
+
         if (page<0){
-            return redirect(routes.HomeController.getOfferPage(0));
+            return redirect(routes.HomeController.getOfferPage(Long.valueOf(0),n,c,g));
         }
-       int page_size=9;
-       List<Oferta> offer = Oferta.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+
+        if (genero!=null) {
+            if (categoria!=null ) {
+                if (nombre!=null ) {
+                    //filtrar por genero categoria y nombre
+                    com.avaje.ebean.Query<Oferta> query = Ebean.find(Oferta.class);
+                    com.avaje.ebean.ExpressionList<models.Oferta> el = query.where().conjunction().disjunction();
+                    for(String word : nombre.split(" ")){
+                        el.icontains("nombre",word);
+                    }
+                    el.endJunction().eq("aplicaciones_oferta.categoria.id",categoria).eq("genero",genero).endJunction();
+                    offer = el.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }else{
+                    /*Filtrar por genero y categoria*/
+                    offer = Oferta.find.where().conjunction().eq("aplicaciones_oferta.categoria.id",categoria).eq("genero",genero).orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }
+            }else{
+                if (nombre!=null) {
+                    /*Filtrar por genero y nombre*/
+                    com.avaje.ebean.Query<Oferta> query = Ebean.find(Oferta.class);
+                    com.avaje.ebean.ExpressionList<models.Oferta> el = query.where().conjunction().disjunction();
+                    for(String word : nombre.split(" ")){
+                        el.icontains("nombre",word);
+                    }
+                    el.endJunction().eq("genero",genero).endJunction();
+                    offer = el.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }else{
+                    /*Filtrar por genero*/
+                    offer = Oferta.find.where().eq("genero",genero).orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }
+            }   
+        }else{
+            if (categoria!=null ) {
+                if (nombre!=null ) {
+                    //filtrar por categoria y nombre
+                    com.avaje.ebean.Query<Oferta> query = Ebean.find(Oferta.class);
+                    com.avaje.ebean.ExpressionList<models.Oferta> el = query.where().conjunction().disjunction();
+                    for(String word : nombre.split(" ")){
+                        el.icontains("nombre",word);
+                    }
+                    el.endJunction().eq("aplicaciones_oferta.categoria.id",categoria).endJunction();
+                    offer = el.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }else{
+                    /*Filtrar por categoria*/
+                    offer = Oferta.find.where().eq("aplicaciones_oferta.categoria.id",categoria).orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }
+            }else{
+                if (nombre!=null) {
+                /*Filtrar por nombre*/
+                    com.avaje.ebean.Query<Oferta> query = Ebean.find(Oferta.class);
+                    com.avaje.ebean.ExpressionList<models.Oferta> el = query.where().disjunction();
+                    for(String word : nombre.split(" ")){
+                        System.out.println(word);
+                        el.icontains("nombre",word);
+                    }
+                    offer = el.endJunction().orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                    System.out.println("entro aqui");
+                }else{
+                    /*No hay filtro*/
+                    offer = Oferta.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
+                }
+            } 
+        }
+
+        
+    
+       //List<Oferta> offer = Oferta.find.orderBy("id").findPagedList(page.intValue(),page_size).getList();
        List<Categoria> categorias_list = Categoria.find.findList();
+       //offer = Oferta.find.where().eq("nombre","Juego de sala").orderBy("id").findPagedList(page.intValue(),page_size).getList();
+       if(nombre!=null){
+            flash("filter","?");
+            flash("nom",nombre);
+       }
+       if(categoria!=null){
+            flash("filter","?");
+            flash("cat",Long.valueOf(categoria).toString());
+       }
+       if(genero!=null){
+            flash("filter","?");
+            flash("gen",Long.valueOf(genero).toString());
+       }
+
        
        return ok(ofertas.render(offer,categorias_list,page));
         

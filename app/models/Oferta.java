@@ -11,7 +11,6 @@ import play.data.validation.*;
 import play.data.*;
 import com.avaje.ebean.*;
 
-import com.avaje.ebean.*;
 
 @Entity
 @Table(name="oferta")
