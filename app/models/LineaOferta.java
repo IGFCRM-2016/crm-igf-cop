@@ -24,11 +24,11 @@ public class LineaOferta extends Model{
 	@ManyToOne
 	public Compra compra;
 
-	public int cantidad;
+	public Integer cantidad=0;
 
-	public double precio_compra;
+	public Double precio_compra=0.0;
 
-	public double subtotal;
+	public Double subtotal=0.0;
 
     public static Finder<Long, LineaOferta> find = new Finder<Long,LineaOferta>(LineaOferta.class);
 

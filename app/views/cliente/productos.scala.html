@@ -67,7 +67,7 @@
                             <div class="row">
                                 
                                 <h5 class="right col-md-9">Existencias: @producto.existencias</h5>
-                                <button class="col-md-2 btn btn-warning" onclick="addToShopingCar('p'+@producto.id);"><span class="glyphicon glyphicon-shopping-cart"></span></button>  
+                                <button class="col-md-2 btn btn-warning" @if(producto.existencias==0){ disabled="disabled" } onclick="addToShopingCar('p'+@producto.id);"><span class="glyphicon glyphicon-shopping-cart"></span></button>  
                             </div>
 
                         </div>                            

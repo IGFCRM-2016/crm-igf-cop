@@ -29,6 +29,9 @@ GET 		/client/productos/image/:id 		controllers.ClienteController.getProductImag
 GET 		/client/productos/page/:page 		controllers.ClienteController.getPage(page: Long)
 GET 		/client/ofertas/image/:id 			controllers.ClienteController.getOfferImage(id: Long)
 GET 		/client/ofertas/page/:page 			controllers.ClienteController.getOfferPage(page: Long)
+GET 		/client/compras						controllers.ClienteController.compras()
+POST		/client/compras/new					controllers.ClienteController.realizarCompra()
+
 
 
 

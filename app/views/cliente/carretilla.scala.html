@@ -24,62 +24,70 @@
 
 
 @cliente.base("Cliente CRM","Carretilla","Articulos a comprar","carretilla",extra,css,js){
+    @if(flash.containsKey("exito")){
+        <div class="alert alert-success fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            <strong>@flash.get("exito")<a href="@routes.ClienteController.compras()">aqui</a></strong>
+        </div>
+    }
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Articulos en carretilla</h3>
         </div>
         <div class="panel-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>Producto/Oferta</th>
-                            <th>Descripcion</th>
-                            <th class="col-xs-1">Cantidad</th>
-                            <th class="col-xs-1">Precio</th>
-                            <th class="col-xs-1">Subtotal</th>
-                            <th class="col-xs-1">Quitar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for(producto <- productos_list){
-                            <tr id="filp@producto.id">
-                                <td><a href="#">@producto.nombre</a></td>
-                                <td>@producto.descripcion</td>
-                                <td><input type="number" id="cantidadp@producto.id" name="cantidad" min="0" max="@producto.existencias" value="1" class="form-control btn-number" onchange="calcularSubtotal('subtotalp@producto.id','cantidadp@producto.id','preciop@producto.id');recalcularTotal();"/></td>
-                                <td><input id="preciop@producto.id" readonly="readonly" value="$@producto.precio" class="form-control"/></td>
-                                <td><input id="subtotalp@producto.id" readonly="readonly" value="$@producto.precio" class="form-control subtotal"></td>
-                                <td><center><button type="button" class="btn btn-danger btn-xs" aria-label="Left Align" onclick="eliminarFila('filp@producto.id');removeToShopingCar('p@producto.id');recalcularTotal();"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></center></td>   
+            <form action="@routes.ClienteController.realizarCompra()" method="post">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Producto/Oferta</th>
+                                <th>Descripcion</th>
+                                <th class="col-xs-1">Cantidad</th>
+                                <th class="col-xs-1">Precio</th>
+                                <th class="col-xs-1">Subtotal</th>
+                                <th class="col-xs-1">Quitar</th>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+                            @for(producto <- productos_list){
+                                <tr id="filp@producto.id">
+                                    <td><a href="#">@producto.nombre</a></td>
+                                    <td>@producto.descripcion</td>
+                                    <td><input type="number" id="cantidadp@producto.id" name="cantidad[p@producto.id]" min="0" max="@producto.existencias" value="1" class="form-control btn-number" onchange="calcularSubtotal('subtotalp@producto.id','cantidadp@producto.id','preciop@producto.id');recalcularTotal();"/></td>
+                                    <td><input id="preciop@producto.id" readonly="readonly" name="precio[p@producto.id]" value="$@producto.precio" class="form-control"/></td>
+                                    <td><input id="subtotalp@producto.id" readonly="readonly" name="subtotal[p@producto.id]"  value="$@producto.precio" class="form-control subtotal"></td>
+                                    <td><center><button type="button" class="btn btn-danger btn-xs" aria-label="Left Align" onclick="eliminarFila('filp@producto.id');removeToShopingCar('p@producto.id');recalcularTotal();"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></center></td>   
+                                </tr>
+                            }
 
-                        @for(oferta <- ofertas_list){
-                            <tr id="filo@oferta.id">
-                                <td><a href="#">@oferta.nombre</a></td>
-                                <td>@oferta.descripcion</td>
-                                <td><input type="number" id="cantidado@oferta.id" name="cantidad" min="0" value="1" class="form-control btn-number" onchange="calcularSubtotal('subtotalo@oferta.id','cantidado@oferta.id','precioo@oferta.id');recalcularTotal();"/></td>
-                                <td><input id="precioo@oferta.id" readonly="readonly" value="$@oferta.precio" class="form-control"/></td>
-                                <td><input id="subtotalo@oferta.id" readonly="readonly" value="$@oferta.precio" class="form-control subtotal"></td>
-                                <td><center><button type="button" class="btn btn-danger btn-xs" aria-label="Left Align" onclick="eliminarFila('filo@oferta.id');removeToShopingCar('o@oferta.id');recalcularTotal()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></center></td>   
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <p><a href="#" class="btn btn-warning" role="button">Realizar Compra</a></p>
+                            @for(oferta <- ofertas_list){
+                                <tr id="filo@oferta.id">
+                                    <td><a href="#">@oferta.nombre</a></td>
+                                    <td>@oferta.descripcion</td>
+                                    <td><input type="number" id="cantidado@oferta.id" name="cantidad[o@oferta.id]" min="0" value="1" class="form-control btn-number" onchange="calcularSubtotal('subtotalo@oferta.id','cantidado@oferta.id','precioo@oferta.id');recalcularTotal();"/></td>
+                                    <td><input id="precioo@oferta.id" readonly="readonly" name="precio[o@oferta.id]" value="$@oferta.precio" class="form-control"/></td>
+                                    <td><input id="subtotalo@oferta.id" readonly="readonly" name="subtotal[o@oferta.id]" value="$@oferta.precio" class="form-control subtotal"></td>
+                                    <td><center><button type="button" class="btn btn-danger btn-xs" aria-label="Left Align" onclick="eliminarFila('filo@oferta.id');removeToShopingCar('o@oferta.id');recalcularTotal()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></center></td>   
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
+                <div class="row">
+                        <div class="col-lg-6">
+                            <p><button type="submit" class="btn btn-warning" role="button">Realizar Compra</button></p>
+                        </div>
 
-                <div class="col-lg-6">
-                    <div class="text-right">
-                        Monto total (USD): <input id="total" name="total" type="text" value=""></div>
-                    </div>
+                        <div class="col-lg-6">
+                            <div class="text-right">
+                                Monto total (USD): <input id="total" name="total" type="text" value="">
+                            </div>
+                        </div>
                 </div>
-                
-                
-            </div>
+            </form>
             
         </div>
+            
     </div>
 }

@@ -60,7 +60,7 @@ public class ClienteController extends Controller {
                         productos.add(Long.valueOf(value.substring(1)));
                     }
                     if(value.startsWith("o")){
-                        productos.add(Long.valueOf(value.substring(1)));
+                        ofertas.add(Long.valueOf(value.substring(1)));
                     }
                 }
 
@@ -89,6 +89,95 @@ public class ClienteController extends Controller {
 
     	return ok(carretilla.render(productos_list,ofertas_list));
     }
+
+    public Result realizarCompra(){
+        Map<String, String[]> values = request().body().asFormUrlEncoded();
+
+        // ArrayList<LineaOferta> lineas_oferta = new ArrayList<LineaOferta>();
+        // ArrayList<LineaProducto> lineas_producto = new ArrayList<LineaProducto>();
+
+        ArrayList<String> elements_id = new ArrayList<String>();
+        for(String key : values.keySet()){
+            if(!key.equals("total")){
+                System.out.println(key);
+                String id = key.substring(key.indexOf("[") + 1, key.indexOf("]"));
+                System.out.println("Id generado: "+ id);
+                if(!elements_id.contains(id)){
+                    elements_id.add(id);
+                }
+            }
+        }
+
+
+
+        Compra compra = new Compra();
+        compra.fecha = Calendar.getInstance().getTime();
+
+        Cliente cliente = Cliente.find.where().eq("username",session("username")).findUnique();
+
+        if(cliente!=null){
+            compra.cliente = cliente;
+        }
+
+        for(String id_code : elements_id){
+            if(id_code.startsWith("o")){
+                Long real_id = Long.valueOf(id_code.substring(1));
+                LineaOferta lo = new LineaOferta();
+                lo.oferta=Oferta.find.byId(real_id);
+                lo.compra = compra;
+                lo.cantidad = Integer.valueOf(values.get("cantidad["+id_code+"]")[0]);
+                lo.subtotal = Double.valueOf(values.get("subtotal["+id_code+"]")[0].substring(1));
+                lo.precio_compra = Double.valueOf(values.get("precio["+id_code+"]")[0].substring(1));
+                compra.lineas_oferta.add(lo);
+            }
+
+            if(id_code.startsWith("p")){
+                Long real_id = Long.valueOf(id_code.substring(1));
+                LineaProducto lp = new LineaProducto();
+                lp.producto=Producto.find.byId(real_id);
+                lp.compra = compra;
+                lp.cantidad = Integer.valueOf(values.get("cantidad["+id_code+"]")[0]);
+                lp.subtotal = Double.valueOf(values.get("subtotal["+id_code+"]")[0].substring(1));
+                lp.precio_compra = Double.valueOf(values.get("precio["+id_code+"]")[0].substring(1));
+                compra.lineas_producto.add(lp);
+            }
+        }
+
+        compra.total=Double.valueOf(values.get("total")[0].substring(1));
+        compra.save();
+
+        //eliminando cookies
+        String cookies_strings[] = request().headers().get("Cookie");
+        ArrayList<String> cookies_name = new ArrayList<String>();
+        if(cookies_strings!=null){
+            for (String cookieStr : cookies_strings) {
+                //String name = cookieStr.substring(0, cookieStr.indexOf("="));
+                System.out.println(cookieStr);
+                String cookies[] = cookieStr.split(";");
+
+                for(int i=0;i<cookies.length;i++){
+                    cookies[i].trim();
+                    String name = cookies[i].substring(0, cookies[i].indexOf("="));
+                    response().discardCookie(name);
+                }
+            }
+        }
+        //fin eliminiacion cookies
+
+
+        flash("exito","Tu compra se ha registrado exitosamente, puedes ver los detalles ");
+
+
+        return redirect(routes.ClienteController.carretilla());
+    }
+
+
+    public Result compras(){
+        List<Compra> compras_list = Compra.find.where().eq("cliente.username",session("username")).findList();
+        return ok(compras.render(compras_list));
+    }
+
+
 
     public Result chat() {
         return ok(chat.render());
