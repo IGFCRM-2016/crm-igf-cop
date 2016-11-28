@@ -11,7 +11,9 @@ GET	/register	controllers.HomeController.register
 POST /register	controllers.HomeController.register_post
 GET	/about	controllers.HomeController.about
 GET /productos/image/:id controllers.HomeController.getProductImage(id: Long)
-GET /page/:page controllers.HomeController.getPage(page: Long)
+GET /productos/page/:page controllers.HomeController.getPage(page: Long)
+GET /ofertas/image/:id controllers.HomeController.getOfferImage(id: Long)
+GET /ofertas/page/:page controllers.HomeController.getOfferPage(page: Long, nombre ?= null, categoria: java.lang.Long ?= null, genero: java.lang.Long ?= null)
 
 
 
@@ -21,8 +23,10 @@ GET	/ofertas	controllers.ClienteController.ofertas
 GET	/incidentes	controllers.ClienteController.incidentes
 GET	/carretilla	controllers.ClienteController.carretilla
 GET	/chat	controllers.ClienteController.chat
-GET /productos/image/:id controllers.ClienteController.getProductImage(id: Long)
-GET /productos/page/:page controllers.ClienteController.getPage(page: Long)
+GET /client/productos/image/:id controllers.ClienteController.getProductImage(id: Long)
+GET /client/productos/page/:page controllers.ClienteController.getPage(page: Long)
+GET /client/ofertas/image/:id controllers.ClienteController.getOfferImage(id: Long)
+GET /client/ofertas/page/:page controllers.ClienteController.getOfferPage(page: Long)
 
 
 

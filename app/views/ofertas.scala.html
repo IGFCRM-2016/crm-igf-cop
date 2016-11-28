@@ -8,7 +8,12 @@
 }
 
 @extra={
-    <div class="form-inline" style="margin-top: 44px;">
+    <div class="col-md-4 col-md-push-1" style="margin-top: 20px;"">
+         <a class="btn btn-success" href="@routes.HomeController.getPage(0)"> Productos</a>
+         <a class="btn btn-success" href="@routes.HomeController.getOfferPage(0)"> Ofertas</a>
+
+    </div>
+    <div class="form-inline col-md-7" style="margin-top: 20px;">
 
         <button type="submit" class="btn btn-primary pull-right">Search</button>
         <input type="text" class="form-control pull-right" maxlength="64" placeholder="Search" />
@@ -17,7 +22,7 @@
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Categoria<span class="caret"></span></button>
             <ul class="dropdown-menu">
                 @for(categoria <- categorias_list){
-                    <li><a href="#">@categoria.nombre</a></li>
+                    <li><a href='@routes.HomeController.getOfferPage(0,if(flash.containsKey("nom")){flash.get("nom")}else{null},categoria.id,if(flash.containsKey("gen")){flash.get("gen").toLong}else{null})'>@categoria.nombre</a></li>
                 }
             </ul>
         </div>  
@@ -34,13 +39,14 @@
         
 }
 
-@cliente.base("Cliente CRM","Ofertas","Encuentre lo que necesite","ofertas",extra){
+@base("Ofertas CRM" ,extra){
     <div class="row">
         <div class="col-md-10 col-md-push-1">
             <ul class="pager">
-              <li  class="previous" ><a href ="@routes.ClienteController.getOfferPage(page-1)">&larr; Anterior</a></li>
-              <li class="next"><a href="@routes.ClienteController.getOfferPage(page+1)">Siguiente &rarr;</a></li>
+              <li  class="previous" ><a href ='@routes.HomeController.getOfferPage(page-1)@if(flash.containsKey("filter")){?}@if(flash.containsKey("nom")){nombre=@flash.get("nom")&}@if(flash.containsKey("cat")){categoria=@flash.get("cat")&}@if(flash.containsKey("gen")){genero=@flash.get("gen")&}'>&larr; Anterior</a></li>
+              <li class="next"><a href='@routes.HomeController.getOfferPage(page+1)@if(flash.containsKey("filter")){?}@if(flash.containsKey("nom")){nombre=@flash.get("nom")&}@if(flash.containsKey("cat")){categoria=@flash.get("cat")&}@if(flash.containsKey("gen")){genero=@flash.get("gen")&}'>Siguiente &rarr;</a></li>
             </ul>
+           
             
             <div class="row">
             
@@ -52,14 +58,16 @@
                 <div class="col-sm-4 col-lg-4 col-md-4">
                     <div class="thumbnail">                        
                         <img class="margin0" src="@routes.ClienteController.getOfferImage(oferta.id)" alt=""  width="320" height="150">                     
+                        
                         <div class="caption">
                             <h4 class="pull-right">$ @oferta.precio</h4>
                             <h4><a href="#">@oferta.nombre</a>
                             </h4>
                             <p>@oferta.descripcion</p>
                             <div class="row">
+                                
                                 <h5 class="right col-md-9">Hasta: @oferta.fecha_fin.format("dd")/@oferta.fecha_fin.format("MM")</h5>
-                                <button class="col-md-2 btn btn-warning"><span class="glyphicon glyphicon-shopping-cart"></span></button>  
+                                
                             </div>
 
                         </div>                            
@@ -72,8 +80,8 @@
             
             </div>
                 <ul class="pager">
-                  <li  class="previous" ><a href ="@routes.ClienteController.getOfferPage(page-1)">&larr; Anterior</a></li>
-                  <li class="next"><a href="@routes.ClienteController.getOfferPage(page+1)">Siguiente &rarr;</a></li>
+                  <li  class="previous" ><a href ="@routes.HomeController.getOfferPage(page-1)">&larr; Anterior</a></li>
+                  <li class="next"><a href="@routes.HomeController.getOfferPage(page+1)">Siguiente &rarr;</a></li>
                 </ul> 
         </div>
     </div>
