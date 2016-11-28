@@ -35,7 +35,40 @@ public class ClienteController extends Controller {
     }
 
     public Result carretilla() {
-    	return ok(carretilla.render());
+        //recuparar todos los productos agregados a la carretilla desde las cookies
+        //ystem.out.println(request().headers().get("Cookie"));
+
+        //System.out.println(request().cookies().get("prod0").value());
+
+        String cookies_strings[] = request().headers().get("Cookie");
+        if(cookies_strings!=null){
+            for (String cookieStr : cookies_strings) {
+                //String name = cookieStr.substring(0, cookieStr.indexOf("="));
+
+                String cookies[] = cookieStr.split(";");
+
+                for(int i=0;i<cookies.length;i++){
+                    cookies[i].trim();
+                    String name = cookies[i].substring(0, cookies[i].indexOf("="));
+                    Logger.info("Name of the cookie : " + name);
+                }
+
+                
+                //Logger.info("Name of the cookie : " + name);
+               // Cookie cookie = request.cookie(name); // Get the instance of the cookie !
+            }
+        }
+        
+
+        //System.out.println(request().cookies().size());
+        // for(play.mvc.Http.Cookie c: response().cookies()){
+        //     System.out.println(c.value());
+        // }
+        //System.out.println(request().queryString());
+        List<Producto> productos_list=Producto.find.findList();
+        List<Oferta> ofertas_list=Oferta.find.findList();
+
+    	return ok(carretilla.render(productos_list,ofertas_list));
     }
 
     public Result chat() {

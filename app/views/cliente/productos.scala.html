@@ -4,7 +4,10 @@
 }
 
 @js={
-    
+
+    <script src="@routes.Assets.versioned("javascripts/bootstrap-notify.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("javascripts/shoping-car.js")" type="text/javascript"></script>
+
 }
 
 @extra={
@@ -37,7 +40,7 @@
         
 }
 
-@cliente.base("Cliente CRM","Productos","Encuentre lo que necesite","productos",extra){
+@cliente.base("Cliente CRM","Productos","Encuentre lo que necesite","productos",extra,css,js){
 	<div class="row">
         <div class="col-md-10 col-md-push-1">
             <ul class="pager">
@@ -64,7 +67,7 @@
                             <div class="row">
                                 
                                 <h5 class="right col-md-9">Existencias: @producto.existencias</h5>
-                                <button class="col-md-2 btn btn-warning"><span class="glyphicon glyphicon-shopping-cart"></span></button>  
+                                <button class="col-md-2 btn btn-warning" onclick="addToShopingCar(@producto.id)"><span class="glyphicon glyphicon-shopping-cart"></span></button>  
                             </div>
 
                         </div>                            
