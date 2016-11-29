@@ -43,6 +43,18 @@ function removeToShopingCar(producto_id) {
     shopingCountCarNotify();
 }
 
+
+function removeAllCookies(){
+
+    var cookies = document.cookie.split (';').filter(function(el) {return el.length != 0});
+    for(var i = 0; i<cookies.length; i++){
+        var cookie = cookies[i];
+        var key = cookie.split('=')[0];
+        var value = cookie.split('=')[1];
+        document.cookie = key + "=;" + "max-age=0" + ";path=/";
+    }
+}
+
 function eliminarFila(tr_id) {
     //no clue what to put here?
     var fil = document.getElementById(tr_id);

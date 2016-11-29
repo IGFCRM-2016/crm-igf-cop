@@ -93,9 +93,6 @@ public class ClienteController extends Controller {
     public Result realizarCompra(){
         Map<String, String[]> values = request().body().asFormUrlEncoded();
 
-        // ArrayList<LineaOferta> lineas_oferta = new ArrayList<LineaOferta>();
-        // ArrayList<LineaProducto> lineas_producto = new ArrayList<LineaProducto>();
-
         ArrayList<String> elements_id = new ArrayList<String>();
         for(String key : values.keySet()){
             if(!key.equals("total")){
@@ -107,8 +104,6 @@ public class ClienteController extends Controller {
                 }
             }
         }
-
-
 
         Compra compra = new Compra();
         compra.fecha = Calendar.getInstance().getTime();
@@ -164,49 +159,59 @@ public class ClienteController extends Controller {
         }
         //fin eliminiacion cookies
 
-
         flash("exito","Tu compra se ha registrado exitosamente, puedes ver los detalles ");
-
 
         return redirect(routes.ClienteController.carretilla());
     }
 
 
     public Result compras(){
-        // List<Compra> compras_list =null;
+        List<Compra> compras_list =null;
 
-        // Map<String, String[]> values = request().body().asFormUrlEncoded();
+        Map<String, String[]> values = request().queryString();
 
-        // //String fecha=values.get("fecha")[0];
-        // final Set<Map.Entry<String,String[]>> entries = request().queryString().entrySet();
-        // String fecha = null;
-        // if(fecha!=null){
-        //     java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy");
-        //     fecha=fecha.replace("-","/");
-        //     fecha="01/"+fecha;
+        String fecha = null;
+        
+        if(values.containsKey("fecha")){
+            fecha = values.get("fecha")[0];
+        }
+    
 
-        //     Date inicio = new Date();
+        if(fecha!=null){
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            fecha="01-"+fecha;
+            try{
 
-        //     try{
-        //         inicio = dateFormat.parse(fecha);
-        //     }catch(Exception e){
-        //         e.printStackTrace();
-        //     }
+                Date inicio = dateFormat.parse(fecha);
+                System.out.println(inicio);
+                Calendar c = Calendar.getInstance();
+                c.setTime(inicio);
+                c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+                Date fin = c.getTime();
+                System.out.println(fin);
+                compras_list=Compra.find.where().conjunction().eq("cliente.username",session("username")).ge("fecha",inicio).le("fecha",fin).findList();
+                flash("fecha",fecha);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }else{
+            Calendar inicio = Calendar.getInstance();
+            Calendar fin = Calendar.getInstance();
+
+            inicio.set(Calendar.DAY_OF_MONTH, inicio.getActualMinimum(Calendar.DAY_OF_MONTH));
+            fin.set(Calendar.DAY_OF_MONTH, fin.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+
+            compras_list=Compra.find.where().conjunction().eq("cliente.username",session("username")).ge("fecha",inicio.getTime()).le("fecha",fin.getTime()).findList();
             
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            
+            flash("fecha",dateFormat.format(new Date()) );
 
+        }
 
-        //     Calendar c = Calendar.getInstance();
-        //     c.setTime(inicio);
-        //     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-        //     Date fin = c.getTime();
-
-        //     //compras_list=Compra.find.where().conjunction().eq("cliente.username",session("username")).ge("fecha",inicio).le("fecha",fin).findList();
-
-
-        // }else{
-            List<Compra> compras_list=Compra.find.where().eq("cliente.username",session("username")).findList();
-        //}
-
+        System.out.println("tam: "+Cliente.find.where().eq("username",null).findList().size());
         return ok(compras.render(compras_list));
     }
 

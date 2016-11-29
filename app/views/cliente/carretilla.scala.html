@@ -23,7 +23,7 @@
 }
 
 
-@cliente.base("Cliente CRM","Carretilla","Articulos a comprar","carretilla",extra,css,js){
+@cliente.base("Cliente CRM","Carretilla","Articulos a comprar","carretilla",css,js,extra){
     @if(flash.containsKey("exito")){
         <div class="alert alert-success fade in">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="row">
                         <div class="col-lg-6">
-                            <p><button type="submit" class="btn btn-warning" role="button">Realizar Compra</button></p>
+                            <p><button type="submit" class="btn btn-warning" role="button" @if( productos_list.size()==0 && ofertas_list.size()==0 ){ disabled="disabled" } >Realizar Compra</button></p>
                         </div>
 
                         <div class="col-lg-6">

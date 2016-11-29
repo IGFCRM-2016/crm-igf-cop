@@ -1,6 +1,16 @@
 @(compras_list: List[Compra])
 @css={
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/zebra_metallic.css")">
+    <!--centered cells-->
+    <style>
+        .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td,    
+        .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+            padding: 8px;
+            line-height: 1.42857143;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+        }
+    </style>
 }
 
 @js={
@@ -30,7 +40,7 @@
             <form method="get" action="@routes.ClienteController.compras()" id="formulario">
                 <input type="text" name="fecha" id="datepicker" class="form-control" style="width: 250px;"/></center>
             </form>
-            <h4>Listado de compras</h4>
+            <h4>Listado de compras <strong>(@(new java.text.SimpleDateFormat("dd-MM-yyyy").parse(flash().get("fecha")).format("MMM yyyy")))</strong></h4>
         </center>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped">
@@ -47,15 +57,108 @@
                     @for(compra <- compras_list ){
                         <tr class="warning">
                             <td>@compra.id</td>
-                            <td>@compra.fecha.format("dd MMM")</td>
-                            <td><a href="#">@compra.lineas_producto.size()</a></td>
-                            <td><a href="#">@compra.lineas_oferta.size()</a></td>
+                            <td>@compra.fecha.format("dd MMM yyyy")</td>
+                            <td><a  data-toggle="modal" data-target="#mod-prods-compra-@compra.id">@compra.lineas_producto.size()</a></td>
+                            <td><a href="#" data-toggle="modal" data-target="#mod-offers-compra-@compra.id">@compra.lineas_oferta.size()</a></td>
                             <td>@compra.total</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
+
+
+        @for(compra <- compras_list){
+            <!-- Modal -->
+            <div class="modal fade" id="mod-prods-compra-@compra.id" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Productos comprados: (compra @compra.id)</h4>
+                        </div>
+                        <div class="modal-body">
+
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Cod</th>
+                                            <th>Imagen</th>
+                                            <th>Valor</th>
+                                            <th>Cantidad</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for(linea <- compra.lineas_producto){
+                                            <tr>
+                                                <td><center>@linea.producto.codigo</center></td>
+                                                <td height="90"><center><img src="@routes.ClienteController.getProductImage(linea.producto.id)" class="img-thubnail"  width="75"/></center></td>
+                                                <td><center>@linea.precio_compra</center></td>
+                                                <td><center>@linea.cantidad</center></td>
+                                                <td><center>@linea.subtotal</center></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                              
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--fin modal-->
+
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="mod-offers-compra-@compra.id" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Productos comprados: (compra @compra.id)</h4>
+                        </div>
+                        <div class="modal-body">
+
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Cod</th>
+                                            <th>Imagen</th>
+                                            <th>Valor</th>
+                                            <th>Cantidad</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for(linea <- compra.lineas_oferta){
+                                            <tr>
+                                                <td><center>@linea.oferta.codigo</center></td>
+                                                <td height="90"><center><img src="@routes.ClienteController.getOfferImage(linea.oferta.id)" class="img-thubnail"  width="75"/></center></td>
+                                                <td><center>@linea.precio_compra</center></td>
+                                                <td><center>@linea.cantidad</center></td>
+                                                <td><center>@linea.subtotal</center></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                              
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--fin modal-->
+        }
+
+
     </div>
 </div>
 <!-- /.row -->
