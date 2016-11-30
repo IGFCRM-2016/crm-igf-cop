@@ -37,6 +37,7 @@ create table compra (
   fecha                         datetime(6),
   total                         double,
   cliente_id                    bigint,
+  incidencia_id                 bigint,
   constraint pk_compra primary key (id)
 );
 
@@ -61,11 +62,15 @@ create table gusto (
 
 create table incidencia (
   id                            bigint auto_increment not null,
-  problema                      varchar(255),
-  resolucion                    varchar(255),
-  cerrada                       tinyint(1) default 0,
+  codigo                        varchar(255),
+  fecha                         datetime(6),
+  titulo                        varchar(255),
+  problema                      varchar(1500),
+  resolucion                    varchar(1000),
+  estado                        integer,
   empleado_id                   bigint,
   cliente_id                    bigint,
+  compra_id                     bigint,
   constraint pk_incidencia primary key (id)
 );
 
@@ -87,6 +92,17 @@ create table linea_producto (
   precio_compra                 double,
   subtotal                      double,
   constraint pk_linea_producto primary key (id)
+);
+
+create table mensaje_incidencia (
+  id                            bigint auto_increment not null,
+  incidencia_id                 bigint,
+  cliente_id                    bigint,
+  empleado_id                   bigint,
+  leido                         tinyint(1) default 0,
+  fecha                         datetime(6),
+  texto                         varchar(1000),
+  constraint pk_mensaje_incidencia primary key (id)
 );
 
 create table oferta (
@@ -155,6 +171,9 @@ alter table cliente add constraint fk_cliente_tarjeta_id foreign key (tarjeta_id
 alter table compra add constraint fk_compra_cliente_id foreign key (cliente_id) references cliente (id) on delete restrict on update restrict;
 create index ix_compra_cliente_id on compra (cliente_id);
 
+alter table compra add constraint fk_compra_incidencia_id foreign key (incidencia_id) references incidencia (id) on delete restrict on update restrict;
+create index ix_compra_incidencia_id on compra (incidencia_id);
+
 alter table empleado add constraint fk_empleado_tipo_id foreign key (tipo_id) references tipo_empleado (id) on delete restrict on update restrict;
 create index ix_empleado_tipo_id on empleado (tipo_id);
 
@@ -170,6 +189,9 @@ create index ix_incidencia_empleado_id on incidencia (empleado_id);
 alter table incidencia add constraint fk_incidencia_cliente_id foreign key (cliente_id) references cliente (id) on delete restrict on update restrict;
 create index ix_incidencia_cliente_id on incidencia (cliente_id);
 
+alter table incidencia add constraint fk_incidencia_compra_id foreign key (compra_id) references compra (id) on delete restrict on update restrict;
+create index ix_incidencia_compra_id on incidencia (compra_id);
+
 alter table linea_oferta add constraint fk_linea_oferta_oferta_id foreign key (oferta_id) references oferta (id) on delete restrict on update restrict;
 create index ix_linea_oferta_oferta_id on linea_oferta (oferta_id);
 
@@ -181,6 +203,15 @@ create index ix_linea_producto_producto_id on linea_producto (producto_id);
 
 alter table linea_producto add constraint fk_linea_producto_compra_id foreign key (compra_id) references compra (id) on delete restrict on update restrict;
 create index ix_linea_producto_compra_id on linea_producto (compra_id);
+
+alter table mensaje_incidencia add constraint fk_mensaje_incidencia_incidencia_id foreign key (incidencia_id) references incidencia (id) on delete restrict on update restrict;
+create index ix_mensaje_incidencia_incidencia_id on mensaje_incidencia (incidencia_id);
+
+alter table mensaje_incidencia add constraint fk_mensaje_incidencia_cliente_id foreign key (cliente_id) references cliente (id) on delete restrict on update restrict;
+create index ix_mensaje_incidencia_cliente_id on mensaje_incidencia (cliente_id);
+
+alter table mensaje_incidencia add constraint fk_mensaje_incidencia_empleado_id foreign key (empleado_id) references empleado (id) on delete restrict on update restrict;
+create index ix_mensaje_incidencia_empleado_id on mensaje_incidencia (empleado_id);
 
 alter table producto add constraint fk_producto_categoria_id foreign key (categoria_id) references categoria (id) on delete restrict on update restrict;
 create index ix_producto_categoria_id on producto (categoria_id);
@@ -207,6 +238,9 @@ alter table cliente drop foreign key fk_cliente_tarjeta_id;
 alter table compra drop foreign key fk_compra_cliente_id;
 drop index ix_compra_cliente_id on compra;
 
+alter table compra drop foreign key fk_compra_incidencia_id;
+drop index ix_compra_incidencia_id on compra;
+
 alter table empleado drop foreign key fk_empleado_tipo_id;
 drop index ix_empleado_tipo_id on empleado;
 
@@ -222,6 +256,9 @@ drop index ix_incidencia_empleado_id on incidencia;
 alter table incidencia drop foreign key fk_incidencia_cliente_id;
 drop index ix_incidencia_cliente_id on incidencia;
 
+alter table incidencia drop foreign key fk_incidencia_compra_id;
+drop index ix_incidencia_compra_id on incidencia;
+
 alter table linea_oferta drop foreign key fk_linea_oferta_oferta_id;
 drop index ix_linea_oferta_oferta_id on linea_oferta;
 
@@ -233,6 +270,15 @@ drop index ix_linea_producto_producto_id on linea_producto;
 
 alter table linea_producto drop foreign key fk_linea_producto_compra_id;
 drop index ix_linea_producto_compra_id on linea_producto;
+
+alter table mensaje_incidencia drop foreign key fk_mensaje_incidencia_incidencia_id;
+drop index ix_mensaje_incidencia_incidencia_id on mensaje_incidencia;
+
+alter table mensaje_incidencia drop foreign key fk_mensaje_incidencia_cliente_id;
+drop index ix_mensaje_incidencia_cliente_id on mensaje_incidencia;
+
+alter table mensaje_incidencia drop foreign key fk_mensaje_incidencia_empleado_id;
+drop index ix_mensaje_incidencia_empleado_id on mensaje_incidencia;
 
 alter table producto drop foreign key fk_producto_categoria_id;
 drop index ix_producto_categoria_id on producto;
@@ -262,6 +308,8 @@ drop table if exists incidencia;
 drop table if exists linea_oferta;
 
 drop table if exists linea_producto;
+
+drop table if exists mensaje_incidencia;
 
 drop table if exists oferta;
 

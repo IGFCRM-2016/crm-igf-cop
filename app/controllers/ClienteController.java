@@ -30,9 +30,136 @@ public class ClienteController extends Controller {
     	return redirect(routes.ClienteController.getOfferPage(0));
     }
 
-    public Result incidentes() {
-    	return ok(incidentes.render());
+    public Result incidencias() {
+        List<Incidencia> incidencias_list =null;
+
+        Map<String, String[]> values = request().queryString();
+
+        String fecha = null;
+        
+        if(values.containsKey("fecha")){
+            fecha = values.get("fecha")[0];
+        }
+    
+
+        if(fecha!=null){
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            fecha="01-"+fecha;
+            try{
+
+                Date inicio = dateFormat.parse(fecha);
+                System.out.println(inicio);
+                Calendar c = Calendar.getInstance();
+                c.setTime(inicio);
+                c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+                Date fin = c.getTime();
+                System.out.println(fin);
+               incidencias_list=Incidencia.find.where().conjunction().eq("cliente.username",session("username")).ge("fecha",inicio).le("fecha",fin).findList();
+                
+                flash("fecha",fecha);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }else{
+            Calendar inicio = Calendar.getInstance();
+            Calendar fin = Calendar.getInstance();
+
+            inicio.set(Calendar.DAY_OF_MONTH, inicio.getActualMinimum(Calendar.DAY_OF_MONTH));
+            fin.set(Calendar.DAY_OF_MONTH, fin.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+
+           incidencias_list=Incidencia.find.where().conjunction().eq("cliente.username",session("username")).ge("fecha",inicio.getTime()).le("fecha",fin.getTime()).findList();
+            
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            
+            flash("fecha",dateFormat.format(new Date()) );
+
+        }
+
+        
+        return ok(incidencias.render(incidencias_list));
+
     }
+
+
+    public Result incidencia_new(Long compra) {
+        //solo se podran levantar insidencias para las compras del mes
+
+        Form<Incidencia> incidencia_form = Form.form(Incidencia.class).bindFromRequest();
+
+
+        if( incidencia_form.hasErrors() ){
+
+
+            Calendar inicio = Calendar.getInstance();
+            Calendar fin = Calendar.getInstance();
+            inicio.set(Calendar.DAY_OF_MONTH, inicio.getActualMinimum(Calendar.DAY_OF_MONTH));
+            fin.set(Calendar.DAY_OF_MONTH, fin.getActualMaximum(Calendar.DAY_OF_MONTH));
+            List<Compra> compras_list=Compra.find.where().conjunction().eq("cliente.username",session("username")).ge("fecha",inicio.getTime()).le("fecha",fin.getTime()).findList();
+            
+
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            flash("fecha",dateFormat.format(new Date()) );
+            
+            flash("modal","mod-incident-compra-"+compra);
+            return badRequest(compras.render(compras_list,incidencia_form));
+
+        }//fin if form has errors
+
+
+        Incidencia nueva = incidencia_form.get();
+        Compra comp = Compra.find.byId(compra);
+        nueva.compra = comp;
+        nueva.cliente = Cliente.find.where().eq("username",session("username")).findUnique();
+        
+        nueva.save();
+
+        return redirect(routes.ClienteController.incidencias());
+    }
+
+
+    public Result showIncidencia(Long id){
+
+        Incidencia in = Incidencia.find.byId(id);
+
+        if(in==null){
+            flash("global_error","Incidencia solicitada no disponible");
+            return redirect(routes.ClienteController.incidencias());
+        }
+
+        List<MensajeIncidencia> mensajes_noleidos = MensajeIncidencia.find.where().conjunction().eq("incidencia",in).eq("cliente",null).eq("leido",false).findList();
+
+        for(MensajeIncidencia mensaje : mensajes_noleidos){
+            mensaje.leido=true;
+            mensaje.update();
+        }
+
+        Form<MensajeIncidencia> mensaje_form = Form.form(MensajeIncidencia.class);
+
+        return ok(incidencia.render(in,mensaje_form));
+
+    }
+
+    public Result enviarMensaje(Long incidencia_id){
+
+        Form<MensajeIncidencia> mensaje_incidencia_form = Form.form(MensajeIncidencia.class).bindFromRequest();
+
+        if(mensaje_incidencia_form.hasErrors()){
+            return badRequest(incidencia.render(Incidencia.find.byId(incidencia_id),mensaje_incidencia_form));
+        }
+
+        MensajeIncidencia mi=mensaje_incidencia_form.get();
+        mi.fecha=new Date();
+        mi.cliente = Cliente.find.where().eq("username",session("username")).findUnique();
+        mi.incidencia = Incidencia.find.byId(incidencia_id);
+
+        mi.save();
+
+        return redirect(routes.ClienteController.showIncidencia(incidencia_id));
+
+    }
+
 
     public Result carretilla() {
         //recuparar todos los productos agregados a la carretilla desde las cookies
@@ -147,13 +274,18 @@ public class ClienteController extends Controller {
         if(cookies_strings!=null){
             for (String cookieStr : cookies_strings) {
                 //String name = cookieStr.substring(0, cookieStr.indexOf("="));
-                System.out.println(cookieStr);
+                System.out.println("cookie de entrada para eliminacion de claves: \n"+cookieStr);
                 String cookies[] = cookieStr.split(";");
 
                 for(int i=0;i<cookies.length;i++){
                     cookies[i].trim();
                     String name = cookies[i].substring(0, cookies[i].indexOf("="));
-                    response().discardCookie(name);
+                    name=name.trim();
+                    if(name.startsWith("prod")){
+                        System.out.println("estoy listo para eliminar cookie:"+name);
+                        response().discardCookie(name);
+                        System.out.println("cookie >"+name+"< descartada");
+                    }
                 }
             }
         }
@@ -190,6 +322,12 @@ public class ClienteController extends Controller {
                 Date fin = c.getTime();
                 System.out.println(fin);
                 compras_list=Compra.find.where().conjunction().eq("cliente.username",session("username")).ge("fecha",inicio).le("fecha",fin).findList();
+                
+
+                Date hoy = new Date();
+                if( hoy.compareTo(fin) >= 0 ){
+                    flash("report_disabled","disabled");
+                }
                 flash("fecha",fecha);
             }catch(Exception e){
                 e.printStackTrace();
@@ -212,7 +350,9 @@ public class ClienteController extends Controller {
         }
 
         System.out.println("tam: "+Cliente.find.where().eq("username",null).findList().size());
-        return ok(compras.render(compras_list));
+        
+        Form<Incidencia> incidencia_form = Form.form(Incidencia.class);
+        return ok(compras.render(compras_list,incidencia_form));
     }
 
 

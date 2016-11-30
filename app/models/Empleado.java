@@ -41,8 +41,11 @@ public class Empleado extends Model{
 	@ManyToOne
 	public TipoEmpleado tipo;
 
-	@OneToMany(mappedBy="empleado")
-	public List<Incidencia> resueltas;
+	@OneToMany(mappedBy="empleado",cascade=CascadeType.ALL)
+	public List<Incidencia> incidencias;
+
+	@OneToMany(mappedBy="empleado",cascade=CascadeType.ALL)
+	public List<MensajeIncidencia> mensajes_incidencia;
 	
     public static Finder<Long, Empleado> find = new Finder<Long,Empleado>(Empleado.class);
 

@@ -22,7 +22,10 @@ GET 		/ofertas/page/:page 		controllers.HomeController.getOfferPage(page: Long, 
 # Rutas del ClienteController
 GET			/client/productos					controllers.ClienteController.productos
 GET			/client/ofertas						controllers.ClienteController.ofertas
-GET			/client/incidentes					controllers.ClienteController.incidentes
+GET			/client/incidencias					controllers.ClienteController.incidencias
+POST		/client/incidencias/new/:compra		controllers.ClienteController.incidencia_new(compra: Long)
+GET			/client/incidencias/show/:id		controllers.ClienteController.showIncidencia(id: Long)
+POST		/client/incidencias/tweet/:id 		controllers.ClienteController.enviarMensaje(id: Long)
 GET			/client/carretilla					controllers.ClienteController.carretilla
 GET			/client/chat						controllers.ClienteController.chat
 GET 		/client/productos/image/:id 		controllers.ClienteController.getProductImage(id: Long)
@@ -43,8 +46,12 @@ GET     	/assets.javascript.ws.js           	controllers.ChatController.wsJs()
 
 
 # Rutas del AgenteServicioController
-GET				/servicio/incidencias			controllers.AgenteServicioController.incidencias
-GET				/servicio/chat					controllers.AgenteServicioController.chat
+GET				/servicio/incidencias					controllers.AgenteServicioController.incidencias
+GET				/servicio/incidencias/show/:id			controllers.AgenteServicioController.showIncidencia(id: Long)
+GET				/servicio/incidencias/attend/:id		controllers.AgenteServicioController.atenderIncidencia(id: Long)
+POST			/servicio/incidencias/close/:id			controllers.AgenteServicioController.cerrarIncidencia(id: Long)
+POST			/servicio/incidencias/tweet/:id 		controllers.AgenteServicioController.enviarMensaje(id: Long)
+GET				/servicio/chat							controllers.AgenteServicioController.chat
 
 
 # Rutas del AgenteMarketingController
@@ -61,15 +68,15 @@ GET	/marketing/estadisticas	controllers.AgenteMarketingController.estadisticas
 
 
 # Rutas del AdministradorController
-GET /admin/empleados	controllers.AdministradorController.empleados
-GET	/admin/productos	controllers.AdministradorController.productos
-POST /admin/empleados/new controllers.AdministradorController.empleado_new
-POST /admin/productos/new controllers.AdministradorController.producto_new
-POST /admin/empleados/edit/:id controllers.AdministradorController.empleado_edit(id: Long)
-POST /admin/productos/edit/:id controllers.AdministradorController.producto_edit(id: Long)
-GET /admin/productos/image/:id controllers.AdministradorController.getProductImage(id: Long)
-POST /admin/empleados/remove/:id controllers.AdministradorController.empleado_remove(id: Long)
-POST /admin/productos/remove/:id controllers.AdministradorController.producto_remove(id: Long)
+GET /admin/empleados					controllers.AdministradorController.empleados
+GET	/admin/productos					controllers.AdministradorController.productos
+POST /admin/empleados/new 				controllers.AdministradorController.empleado_new
+POST /admin/productos/new 				controllers.AdministradorController.producto_new
+POST /admin/empleados/edit/:id 			controllers.AdministradorController.empleado_edit(id: Long)
+POST /admin/productos/edit/:id 			controllers.AdministradorController.producto_edit(id: Long)
+GET /admin/productos/image/:id 			controllers.AdministradorController.getProductImage(id: Long)
+POST /admin/empleados/remove/:id 		controllers.AdministradorController.empleado_remove(id: Long)
+POST /admin/productos/remove/:id 		controllers.AdministradorController.producto_remove(id: Long)
 
 
 

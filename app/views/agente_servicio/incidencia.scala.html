@@ -1,0 +1,278 @@
+@(incidencia: Incidencia, mensaje_form: Form[MensajeIncidencia], incidencia_form: Form[Incidencia], empleado: Empleado)
+@import helper._
+
+@css={
+    
+}
+
+@js={
+
+}
+
+
+@agente_servicio.base("Agente CRM","Incidencia: "+incidencia.id,"Problema","incidencias",css,js){
+    
+    
+
+
+    <div class="row">
+    <div class="col-lg-12">
+    
+
+    @if(incidencia_form.hasGlobalErrors) {
+
+        @for(error <- incidencia_form.globalErrors) {
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+            </div>
+        }
+    }
+
+    @for(error <- incidencia_form("texto").errors) {
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+        </div>
+    }
+    <div class="well">
+        Estado: @if(incidencia.estado==1){Abierta}else{@if(incidencia.estado==2){Gestionando}else{Cerrada}}
+        @if(incidencia.empleado==null){
+          <a href="@routes.AgenteServicioController.atenderIncidencia(incidencia.id)" class="btn btn-danger pull-right">Atender</a>
+        }else{
+
+          @if(incidencia.empleado.equals(empleado)){
+            <button type="button" class="btn btn-warning pull-right" data-togle="modal" data-target="mod-cerrar-incidencia">Cerrar</button>
+
+            <div class="modal fade" id="mod-cerrar-incidencia">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  @form(action=routes.AgenteServicioController.cerrarIncidencia(incidencia.id)){
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Cerrar incidencia: (@incidencia.id)</h4>
+                    </div>
+                    <div class="modal-body">
+                      @inputText(incidencia.getForm()("id"), 'readonly->"readonly",'_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Id", '_label -> "Id: ")
+                      @textarea(incidencia.getForm()("resolucion"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Escriba la resolucion que le dio al problema...", '_label -> "Resolucion: ")
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-warning" data-dismiss="modal">Realizar cierre</button>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+
+          @if(incidencia.resolucion!=null){
+            <textarea readonly="readonly" class="form-control">
+              @incidencia.resolucion
+            </textarea>
+          }
+          
+        }
+        
+    </div>
+
+
+    <div class="col-xs-6">
+
+
+      @if(mensaje_form.hasGlobalErrors) {
+
+          @for(error <- mensaje_form.globalErrors) {
+              <div class="alert alert-danger">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+              </div>
+          }
+      }
+
+      @for(error <- mensaje_form("texto").errors) {
+          <div class="alert alert-danger">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>@Messages(error.messages, error.arguments.toArray: _*)</strong>
+          </div>
+      }
+
+      <span><i class="glyphicon glyphicon-comment"></i> @incidencia.mensajes.length mensajes en total</span>
+      <hr>
+
+      @for(mensaje <- incidencia.mensajes){
+        <div class="panel @if(mensaje.cliente!=null){panel-warning}else{@if(mensaje.empleado!=null){panel-success}}">
+          <div class="panel-body">
+            <!-- <textarea class="form-control pull-left"> -->
+            <blockquote class="@if(mensaje.cliente!=null){pull-left}else{@if(mensaje.empleado!=null){pull-right}}">
+              <p class="@if(mensaje.cliente!=null){text-warning}else{@if(mensaje.empleado!=null){text-success}}">@mensaje.texto</p>
+              <small>
+                <span class="text-left"><span><i class="glyphicon glyphicon-calendar"></i> @mensaje.fecha.format("dd MMM yyyy HH:mm:ss") &nbsp;|&nbsp;</span></span>
+                <cite title="Source Title">
+                  <span class=""><i class="glyphicon glyphicon-user"></i> @if(mensaje.cliente!=null){@mensaje.cliente.nombre}else{@if(mensaje.empleado!=null){@mensaje.empleado.nombre}}</span>
+                </cite>
+              </small>
+            </blockquote>
+            <!-- </textarea> -->
+          </div>
+        </div>
+      }
+
+      <div class="panel panel-default">
+        @form(action=routes.AgenteServicioController.enviarMensaje(incidencia.id)){
+          <div class="panel-body">
+              @textarea(mensaje_form("texto"), '_showConstraints -> false , '_showErrors -> false,'class -> "form-control", 'placeholder -> "Escriba un mensaje...", '_label -> "Respuesta rapida: ")
+          </div>
+          <div class="panel-footer">
+            <button class="btn btn-danger form-control" @if(incidencia.estado==3 ||incidencia.estado==1){ disabled="disabled" }><span class="glyphicon glyphicon-send"></span> Enviar</button>
+          </div>
+        }
+      </div>
+    </div>
+
+
+
+    <div class="col-xs-6">
+    <div class="well">
+
+    
+      <div class="media">
+          <!-- <a class="pull-left" href="#">
+              <img class="media-object" src="http://placekitten.com/150/150">
+          </a> -->
+        <div class="media-body">
+            <ul class="list-inline list-unstyled">
+              <li class="pull-right"><span><i class="glyphicon glyphicon-calendar"></i> @incidencia.fecha.format("dd MMM yyyy")</span></li>
+            </ul>
+            <ul class="list-unstyled">
+              <li class=""><i class="glyphicon glyphicon-user"></i> @incidencia.cliente.nombre</li>
+              <li><i class="glyphicon glyphicon-phone"></i> @incidencia.cliente.telefono</li>
+              <li class=""><i class="glyphicon glyphicon-inbox"></i> @incidencia.cliente.email</li>
+            </ul>
+            <br>
+            <center><h3 class="media-heading">"@incidencia.titulo"</h3></center>
+            <center><p>@incidencia.problema</p></center>
+        </div>
+      </div>
+      <hr/>
+      <pre><center>DETALLE COMPRA: @incidencia.compra.id</center></pre>
+      <div class="panel panel-default">
+        <div class="panel-heading"><center>PRODUCTOS</center></div>
+        <!-- <hr/> -->
+          <!-- <p><pre><center><strong>PRODUCTOS:</strong></center></pre></p> -->
+          <table class="table table-hover">
+          <!-- <caption><center>PRODUCTOS</center></caption> -->
+
+              <thead>
+                  <tr>
+                      <th><center>Producto</center></th>
+                      <th><center>Imagen</center></th>
+                      <th><center>Valor</center></th>
+                      <th><center>Cantidad</center></th>
+                      <th><center>Subtotal</center></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @for(linea <- incidencia.compra.lineas_producto){
+                      <tr class="warning">
+                          <td><center>@linea.producto.codigo</center></td>
+                          <td height="90"><center><img src="@routes.ClienteController.getProductImage(linea.producto.id)" class="img-thubnail"  width="75"/></center></td>
+                          <td><center>@linea.precio_compra</center></td>
+                          <td><center>@linea.cantidad</center></td>
+                          <td><center>@linea.subtotal</center></td>
+                      </tr>
+                  }
+              </tbody>
+          </table>
+      </div>
+
+
+      <div class="panel panel-default">
+        <div class="panel-heading"><center>OFERTAS</center></div>
+        <!-- <hr/> -->
+          <!-- <p><pre><center><strong>OFERTAS:</strong></center></pre></p> -->
+          <table class="table table-hover ">
+              <!-- <caption><center>OFERTAS</center></caption> -->
+              <thead>
+                  <tr>
+                      <th><center>Oferta</center></th>
+                      <th><center>Imagen</center></th>
+                      <th><center>Incluye</center></th>
+                      <th><center>Valor</center></th>
+                      <th><center>Cantidad</center></th>
+                      <th><center>Subtotal</center></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @for(linea <- incidencia.compra.lineas_oferta){
+                      <tr class="info">
+                          <td><center>@linea.oferta.codigo</center></td>
+                          <td height="90"><center><img src="@routes.ClienteController.getOfferImage(linea.oferta.id)" class="img-thubnail"  width="75"/></center></td>
+                          <td><center><button class="btn btn-success btn-xs" data-toggle="modal" data-target="#lineaof-@linea.id"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> @linea.oferta.producto_join_oferta.length productos</button></center></td>
+                          <td><center>@linea.precio_compra</center></td>
+                          <td><center>@linea.cantidad</center></td>
+                          <td><center>@linea.subtotal</center></td>
+                      </tr>
+                  }
+              </tbody>
+          </table>
+      </div>
+      
+      <pre><center>MONTO TOTAL: @incidencia.compra.total</center></pre>
+
+
+
+      @for(linea <- incidencia.compra.lineas_oferta){
+
+        <!-- Modal -->
+        <div class="modal fade" id="lineaof-@linea.id" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Productos incluidos: (oferta @linea.oferta.id)</h4>
+                    </div>
+                    <div class="modal-body">
+
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Descripcion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for(pjo <- linea.oferta.producto_join_oferta){
+                                        <tr>
+                                            <td><center>@pjo.producto.codigo</center></td>
+                                            <td height="90"><center><img src="@routes.ClienteController.getProductImage(pjo.producto.id)" class="img-thubnail"  width="75"/></center></td>
+                                            <td><center>@pjo.producto.nombre</center></td>
+                                            <td><center>@pjo.producto.descripcion</center></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                          
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <!--fin modal-->
+      }
+
+      </div><!--fin class well-->
+      </div><!--div class col 6-->
+
+
+
+
+      </div>
+</div>
+<!-- /.row -->
+}

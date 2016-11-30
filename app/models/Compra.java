@@ -31,6 +31,9 @@ public class Compra extends Model{
 	@OneToMany(mappedBy="compra",cascade=CascadeType.ALL)
 	public List<LineaOferta> lineas_oferta;
 
+	@ManyToOne(cascade=CascadeType.ALL)
+	public Incidencia incidencia;
+
     public static Finder<Long, Compra> find = new Finder<Long,Compra>(Compra.class);
 
 }

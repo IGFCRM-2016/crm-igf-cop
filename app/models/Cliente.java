@@ -44,6 +44,12 @@ public class Cliente extends Model{
 	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	public List<Compra> compras;
 
+	@OneToMany(mappedBy="empleado",cascade=CascadeType.ALL)
+	public List<Incidencia> incidencias;
+
+	@OneToMany(mappedBy="cliente",cascade=CascadeType.ALL)
+	public List<MensajeIncidencia> mensajes_incidencia;
+
 	
     public static Finder<Long, Cliente> find = new Finder<Long,Cliente>(Cliente.class);
 

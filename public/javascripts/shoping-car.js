@@ -1,6 +1,10 @@
 function shopingCountCarNotify(){
     var cookies =document.cookie.split (';').filter(function(el) {return el.length != 0});
-    document.getElementById('car_notification').innerHTML = cookies.length;
+    var tamanio = cookies.length
+    document.getElementById('car_notification').innerHTML = tamanio;
+    if(tamanio==0){
+        document.getElementById('comprar').disabled=true;
+    }
 }
 
 
@@ -50,8 +54,13 @@ function removeAllCookies(){
     for(var i = 0; i<cookies.length; i++){
         var cookie = cookies[i];
         var key = cookie.split('=')[0];
+        key = key.trim();
         var value = cookie.split('=')[1];
-        document.cookie = key + "=;" + "max-age=0" + ";path=/";
+        value = value.trim();
+        if(key.startsWith("prod")){
+            document.cookie = key + "=;" + "max-age=0" + ";path=/";
+            console.log("'"+key+"' removed.");
+        }
     }
 }
 

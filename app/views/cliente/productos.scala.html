@@ -51,7 +51,7 @@
             <div class="row">
             
             @for((producto,index) <- productos_list.zipWithIndex){
-                @if(3%(index+1)==0 && index!=0){
+                @if((index+1)%3==0 && index!=0){
                 <div class="row">
                 
                 }
@@ -73,7 +73,7 @@
                         </div>                            
                     </div>
                 </div>
-                @if(3%(index+1)==0 && index!=0){
+                @if((index+1)%3==0 && index!=0){
                 </div> 
                 }
             }
