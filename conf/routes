@@ -29,9 +29,9 @@ POST		/client/incidencias/tweet/:id 		controllers.ClienteController.enviarMensaj
 GET			/client/carretilla					controllers.ClienteController.carretilla
 GET			/client/chat						controllers.ClienteController.chat
 GET 		/client/productos/image/:id 		controllers.ClienteController.getProductImage(id: Long)
-GET 		/client/productos/page/:page 		controllers.ClienteController.getPage(page: Long)
+GET 		/client/productos/page/:page 		controllers.ClienteController.getPage(page: Long, nombre ?= null, categoria: java.lang.Long ?= null, genero: java.lang.Long ?= null)
 GET 		/client/ofertas/image/:id 			controllers.ClienteController.getOfferImage(id: Long)
-GET 		/client/ofertas/page/:page 			controllers.ClienteController.getOfferPage(page: Long)
+GET 		/client/ofertas/page/:page 			controllers.ClienteController.getOfferPage(page: Long, nombre ?= null, categoria: java.lang.Long ?= null, genero: java.lang.Long ?= null)
 GET 		/client/compras						controllers.ClienteController.compras()
 POST		/client/compras/new					controllers.ClienteController.realizarCompra()
 
