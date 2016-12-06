@@ -118,11 +118,15 @@ public class ClienteController extends Controller {
         Incidencia nueva = incidencia_form.get();
         Compra comp = Compra.find.byId(compra);
         nueva.compra = comp;
+
         nueva.cliente = Cliente.find.where().eq("username",session("username")).findUnique();
         
         nueva.save();
+        comp.incidencia=nueva;
+        comp.update();
 
-        return redirect(routes.ClienteController.incidencias());
+        flash("exito", "Tu incidencia ha sido guardada con exito, puedes ver los detalles de incidencias ");
+        return redirect(routes.ClienteController.compras());
     }
 
 
@@ -332,7 +336,7 @@ public class ClienteController extends Controller {
                 
 
                 Date hoy = new Date();
-                if( hoy.compareTo(fin) >= 0 ){
+                if( hoy.compareTo(fin) >= 0){
                     flash("report_disabled","disabled");
                 }
                 flash("fecha",fecha);
