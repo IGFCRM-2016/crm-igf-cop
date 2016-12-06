@@ -4,7 +4,7 @@ $(function(){
     var WS = window['MozWebSocket'] ? window['MozWebSocket'] : WebSocket;
 
     // open pewpew with websocket
-    var socket = new WS('@routes.ChatController.wsInterface("asdf").webSocketURL(request)');
+    var socket = new WS('@routes.ChatController.wsInterface().webSocketURL(request)');
 
     var writeMessages = function(event){
         $('#socket-messages').prepend(
@@ -13,9 +13,6 @@ $(function(){
             '<li class="media">'+
                 '<div class="media-body">'+
                     '<div class="media">'+
-                        '<a class="pull-left" href="#">'+
-                            '<img class="media-object img-circle " src="@routes.Assets.versioned("images/agent.png")" />'+
-                        '</a>'+
                         '<div class="media-body" >'+
                             event.data+
                             '<br />'+

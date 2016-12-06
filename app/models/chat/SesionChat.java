@@ -1,4 +1,4 @@
-package models;
+package models.chat;
 import play.mvc.*;
 import play.libs.*;
 import play.libs.F.*;

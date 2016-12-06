@@ -57,7 +57,7 @@
                             <td>@incidencia.fecha.format("dd-MMM-yyyy")</td>
                             <td>@incidencia.compra.id</td>
                             <td>@incidencia.titulo</td>
-                            <td>@incidencia.problema.substring(0,50)...</td>
+                            <td>@incidencia.problema.concat("                                                  ").substring(0,50)...</td>
                             <td>@if(incidencia.estado==1){Abierta}else{@if(incidencia.estado==2){Gestionando}else{Cerrada}}</td>
                             <td>@if(incidencia.resolucion==null){No}else{Si}</td>
                             @if(incidencia.empleado==empleado){

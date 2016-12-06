@@ -58,7 +58,7 @@
                             <td>@incidencia.fecha.format("dd-MMM-yyyy")</td>
                             <td>@incidencia.compra.id</td>
                             <td>@incidencia.titulo</td>
-                            <td>@incidencia.problema.substring(0,50)...</td>
+                            <td>@incidencia.problema.concat("                                                  ").substring(0,50)...</td>
                             <td>@if(incidencia.estado==1){Abierta}else{@if(incidencia.estado==2){Gestionando}else{Cerrada}}</td>
                             <td>@if(incidencia.resolucion==null){No}else{Si}</td>
                             <td><a href="@routes.ClienteController.showIncidencia(incidencia.id)">Ver <div class="badge">@com.avaje.ebean.Ebean.find(classOf[MensajeIncidencia]).where().conjunction().eq("cliente",null).eq("leido",false).eq("incidencia",incidencia).findList().size() new</div></a></td>

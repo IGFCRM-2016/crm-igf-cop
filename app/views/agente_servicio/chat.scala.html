@@ -1,120 +1,81 @@
+@(username: String, nombre: String, tipo: String)
+
 @css={
     <!-- <link rel="sytlesheet" media="screen" href="@routes.Assets.versioned("stylesheets/chat.css")"/> -->
     <!-- <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.versioned("font-awesome/css/font-awesome.min.css")"> -->
 
     <style>
-        .message-box {
-          height: 400px;
+        #message-box {
+          height: 200px;
           overflow-y: auto;
          }
 
-         .users-box {
-          height: 450px;
+         .atendiendo {
+          height: 220px;
           overflow-y: auto;
          }
+
+         .cola {
+          height: 300px;
+          overflow-y: auto;
+         }
+
     </style>
 }
 
 @js={
-    <!-- <script src="@routes.Assets.versioned("javascripts/chat.js")" type="text/javascript"></script> -->
-    <!-- <script type="text/javascript" src="@routes.ChatController.wsJs()"></script> -->
+    <script type="text/javascript" src="@routes.ChatController.communication_api(username,nombre,tipo)"></script>
+    
 
-    <script>
-        $(function(){
-
-            // get websocket class, firefox has a different way to get it
-            var WS = window['MozWebSocket'] ? window['MozWebSocket'] : WebSocket;
-
-            // open pewpew with websocket
-            var socket = new WS('@routes.ChatController.wsInterface(session().get("username")).webSocketURL(request)');
-
-            var writeMessages = function(event){
-                $('#socket-messages').prepend(
-
-                    '<!--message item-->'+
-                    '<li class="media">'+
-                        '<div class="media-body">'+
-                            '<div class="media">'+
-                                '<a class="pull-left" href="#">'+
-                                    '<img class="media-object img-circle " src="@routes.Assets.versioned("images/agent.png")" />'+
-                                '</a>'+
-                                '<div class="media-body" >'+
-                                    event.data+
-                                    '<br />'+
-                                   '<small class="text-muted">Jhon Rexa | 23rd June at 5:00pm</small>'+
-                                   '<hr />'+
-                                '</div>'+
-                            '</div>'+
-                        '</div>'+
-                    '</li>'+
-                    '<!--fin message item-->'
-                );
-            }
-
-            socket.onmessage = writeMessages;
-
-            $('#socket-input').keyup(function(event){
-                var charCode = (event.which) ? event.which : event.keyCode ;
-
-                // if enter (charcode 13) is pushed, send message, then clear input field
-                if(charCode === 13){
-                    socket.send($(this).val());
-                    $(this).val('');
-                }
-            });
-        });
+    <script language="javascript">
+        function myPopup(url, windowname, w, h, x, y)
+        {
+            window.open(url, windowname, "resizable=no, toolbar=no, scrollbars=yes, menubar=no, status=no, directories=no, width=" + w + ", height=" + h + ", left=" + x + ", top=" + y);
+        }
     </script>
+
+
 }
 
-@agente_servicio.base("Agente CRM","Chat","Consultas y problemas de clientes","chat",css,js){
+@agente_servicio.base("Agente CRM","Chat","Atencion al cliente","chat",css,js){
 
-<div class="row " style="padding-top:40px;">
-
+<div class="row " style="padding-top:0px;">
+    
+    <div class="col-md-12">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <center>COLA DE CLIENTES</center>
+            </div>
+            <div class="cola">
+            <table class="table table-hover table-condensed " id="tabla-cola">
+                <thead>
+                    <tr>
+                        <th><center>Username</center></th>
+                        <th><center>Nombre</center></th>
+                        <th><center>Atender</center></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            
+                    <!--AQUI IRAN TODOS LOS CLIENTES EN COLA-->
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
 
     <!--CONTENEDOR MENSAJES-->
     <div class="col-md-8">
         <div class="panel panel-info">
             <div class="panel-heading">
-                MENSAJES
+                <center>MENSAJES: <span id="actual-nombre-conversation-indicator"></span> (<span id="actual-username-conversation-indicator"></span>)</center>
             </div>
-            <div class="panel-body">
-                <ul class="media-list message-box" id="socket-messages">
+            <div class="panel-body" id="message-box">
+                <ul class="media-list " id="socket-messages">
 
-                    <!--message item-->
-                    <li class="media">
-                        <div class="media-body">
-                            <div class="media">
-                                <a class="pull-left" href="#">
-                                    <img class="media-object img-circle " src="@routes.Assets.versioned("images/me.png")" />
-                                </a>
-                                <div class="media-body" >
-                                    Hola soy un cliente
-                                    <br />
-                                   <small class="text-muted">Alex Deo | 23rd June at 5:00pm</small>
-                                    <hr />
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <!--fin message item-->
 
-                    <!--message item-->
-                    <li class="media">
-                        <div class="media-body">
-                            <div class="media">
-                                <a class="pull-left" href="#">
-                                    <img class="media-object img-circle " src="@routes.Assets.versioned("images/agent.png")" />
-                                </a>
-                                <div class="media-body" >
-                                    Hola soy un agente de servicio en que puedo ayudarle
-                                    <br />
-                                   <small class="text-muted">Jhon Rexa | 23rd June at 5:00pm</small>
-                                    <hr />
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <!--fin message item-->
+                    <!--AQUI SE COLOCARAN TODOS LOS MENSAJES-->
 
 
                 </ul>
@@ -124,7 +85,7 @@
                 <div class="input-group">
                     <input type="text"  id="socket-input" class="form-control" placeholder="Escribe un mensaje" />
                     <span class="input-group-btn">
-                        <button class="btn btn-info" type="button">ENVIAR</button>
+                        <button class="btn btn-info" type="button" id="send-button">ENVIAR</button>
                     </span>
                 </div>
             </div>
@@ -137,45 +98,14 @@
 
     <!--CONTENEDOR USUARIOS EN LINEA-->
     <div class="col-md-4">
-        <div class="panel panel-primary">
+        <div class="panel panel-success">
             <div class="panel-heading">
-               USUARIOS EN LINEA
+               <center>CONVERSACIONES</center>
             </div>
             <div class="panel-body">
-                <ul class="media-list users-box">
+                <ul class="media-list atendiendo nav nav-pills nav-stacked" id="conversation-list">
 
-                    <!--online user item-->
-                    <li class="media">
-                        <div class="media-body">
-                            <div class="media">
-                                <a class="pull-left" href="#">
-                                    <img class="media-object img-circle" style="max-height:40px;" src="@routes.Assets.versioned("images/me.png")" />
-                                </a>
-                                <div class="media-body" >
-                                    <h5>Alex Deo | User </h5>
-                                   <small class="text-muted">Active From 3 hours</small>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <!--fin online user item-->
-
-
-                    <!--online user item-->
-                    <li class="media">
-                        <div class="media-body">
-                            <div class="media">
-                                <a class="pull-left" href="#">
-                                    <img class="media-object img-circle" style="max-height:40px;" src="@routes.Assets.versioned("images/agent.png")" />
-                                </a>
-                                <div class="media-body" >
-                                    <h5>Jhon Rexa | User </h5>
-                                   <small class="text-muted">Active From 3 hours</small>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <!--online user item-->
+                    <!--  AQUI ESTARAN TODA LAS CONVERSACIONES-->
 
                     
                 </ul>

@@ -358,7 +358,14 @@ public class ClienteController extends Controller {
 
 
     public Result chat() {
-        return ok(chat.render());
+        String username = session("username");
+        Cliente cliente = Cliente.find.where().eq("username",username).findUnique();
+
+        if(cliente==null){
+            return redirect(routes.HomeController.login());
+        }
+        String nombre=cliente.nombre;
+        return ok(chat.render(username,nombre,"cliente"));
     }
 
     public Result getProductImage(Long id){

@@ -128,7 +128,14 @@ public class AgenteServicioController extends Controller {
     }
 
 	public Result chat() {
-        return ok(chat.render());
+        String username = session("username");
+        Empleado cliente = Empleado.find.where().eq("username",username).findUnique();
+
+        if(cliente==null){
+            return redirect(routes.HomeController.login());
+        }
+        String nombre=cliente.nombre;
+        return ok(chat.render(username,nombre,"agente"));
     }
 
 }

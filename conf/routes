@@ -39,8 +39,9 @@ POST		/client/compras/new					controllers.ClienteController.realizarCompra()
 
 
 # Rutas del ChatController
-GET     	/wsInterface/:username              controllers.ChatController.wsInterface(username: String)
-GET     	/assets.javascript.ws.js           	controllers.ChatController.wsJs()
+GET     	/socket              						controllers.ChatController.communication_socket()
+#GET     	/assets.javascript.ws.js           			controllers.ChatController.wsJs()
+GET     	/assets.javascript.communication_api.js     controllers.ChatController.communication_api(username,nombre,tipo)
 
 
 
